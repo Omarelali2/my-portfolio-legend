@@ -2,7 +2,7 @@
 import React, { useState } from "react"
 import NextLink from "next/link"
 import { Link as ScrollLink } from "react-scroll"
-import { Briefcase, Code, ExpandIcon, Folder, Home, User } from "lucide-react"
+import { Briefcase, Code, Folder, Home, User } from "lucide-react"
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)

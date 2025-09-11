@@ -15,7 +15,7 @@ const HomeBanner = () => {
       <div className='relative container mx-auto max-w-7xl flex flex-col-reverse md:flex-row items-center justify-between gap-12'>
         <div className='flex-1 text-center md:text-left'>
           <h1 className='text-4xl sm:text-5xl md:text-6xl font-bold mb-4 leading-tight'>
-            Hi, I'm{" "}
+            Hi, I am{" "}
             <span className='text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500'>
               Omar El-Ali
             </span>
@@ -23,7 +23,7 @@ const HomeBanner = () => {
           <p className='text-lg sm:text-xl text-gray-300 mb-6 max-w-prose mx-auto md:mx-0'>
             I am a passionate software developer specializing in building modern
             web applications. I love bringing ideas to life through clean,
-            efficient, and scalable code. Let's create something amazing
+            efficient, and scalable code. Let&apos;s create something amazing
             together.
           </p>
 

@@ -29,9 +29,9 @@ const About = () => {
           </div>
           <div className='flex-1 text-center md:text-left'>
             <p className='text-lg sm:text-xl text-gray-300 mb-6 max-w-prose mx-auto md:mx-0 leading-relaxed'>
-              Hi! I'm{" "}
+              Hi! I am{" "}
               <span className='text-teal-400 font-semibold'>Omar El-Ali</span>,
-              a Computer Science graduate currently pursuing my Master's in
+              a Computer Science graduate currently pursuing my Master s in
               Software Engineering at the Lebanese University (LU). As a Junior
               Web Developer, I specialize in building dynamic and responsive web
               applications using React.js for the frontend, Node.js for the
@@ -40,7 +40,7 @@ const About = () => {
               learning new technologies to grow as a professional.
             </p>
             <p className='text-lg sm:text-xl text-gray-400 max-w-prose mx-auto md:mx-0 leading-relaxed'>
-              When I'm not coding, I enjoy learning new technologies,
+              When I am not coding, I enjoy learning new technologies,
               contributing to open-source projects, and staying up-to-date with
               the latest industry trends. I am always open to new challenges and
               collaborative opportunities.

@@ -18,13 +18,13 @@ const Contact = () => {
       <div className='flex flex-col md:flex-row justify-between gap-10'>
         <div className='md:w-1/2'>
           <p className='text-lg leading-relaxed font-semibold'>
-            I'm currently seeking internship or job opportunities where I can
-            grow as a developer and contribute to meaningful projects. I’m
+            I am currently seeking internship or job opportunities where I can
+            grow as a developer and contribute to meaningful projects. I am
             always eager to learn, collaborate, and take on new challenges.{" "}
             <br />
             <br />
             However, if you have any other requests, questions, or even just
-            want to connect and share ideas, feel free to reach out — I’d be
+            want to connect and share ideas, feel free to reach out — I&apos;d be
             more than happy to chat and build connections!
           </p>
         </div>
