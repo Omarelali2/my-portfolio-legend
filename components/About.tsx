@@ -138,7 +138,7 @@ const About: React.FC = () => {
             <p className='text-lg sm:text-xl text-gray-300 max-w-prose mx-auto md:mx-0 leading-relaxed font-medium border-l-4 border-teal-400 pl-4'>
               Hello. I am{" "}
               <span className='text-teal-400 font-bold'>Omar El-Ali</span>, a
-              Computer Science graduate progressing through my **Master's in
+              Computer Science graduate progressing through my **Masters in
               Software Engineering** at the Lebanese University. My professional
               foundation is built on transforming complex requirements into
               functional, scalable software solutions.
