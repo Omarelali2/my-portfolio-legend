@@ -1,168 +1,91 @@
 "use client"
 
-// --- DEPENDENCIES ---
-import React, { useEffect, useRef, useState, useMemo } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { Link as ScrollLink } from "react-scroll"
-import { Briefcase, Code, Folder, Home, User, Menu, X, MessageSquare } from "lucide-react" // Added MessageSquare for Contact
+import { Briefcase, Code, Folder, Home, User, Menu, X } from "lucide-react"
 import { gsap } from "gsap"
 
-// --- INTERFACES & DATA ---
-interface NavItem {
-  id: string
-  label: string
-  icon: React.ElementType // Use React.ElementType for Lucide icons
-  offset?: number
-}
-
-const navLinks: NavItem[] = [
-  { id: "home", label: "Home", icon: Home, offset: -100 },
-  { id: "about", label: "About", icon: User, offset: -80 },
-  { id: "exp", label: "Experience", icon: Briefcase, offset: -80 },
-  { id: "skills", label: "Skills", icon: Code, offset: -80 },
-  { id: "projects", label: "Projects", icon: Folder, offset: -80 },
-  { id: "contact", label: "Contact", icon: MessageSquare, offset: -80 }, // Added Contact link
-]
-
-// --- MAIN COMPONENT ---
 export default function Navbar() {
   const navRef = useRef<HTMLElement | null>(null)
-  const mobileMenuRef = useRef<HTMLDivElement | null>(null)
   const [open, setOpen] = useState(false)
-  
-  // Use useMemo to create a stable GSAP animation instance for the mobile menu
-  const menuAnimation = useMemo(() => {
-    // We use a timeline to control the opening and closing state
-    return gsap.timeline({ paused: true, reversed: true })
+
+  useEffect(() => {
+    if (!navRef.current) return
+
+    gsap.fromTo(
+      navRef.current,
+      { y: -80, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1, ease: "power3.out" }
+    )
   }, [])
 
-  // --- 1. GSAP ENTRANCE ANIMATION ---
-  useEffect(() => {
-    if (navRef.current) {
-      // Animate the main navbar container on mount
-      gsap.fromTo(
-        navRef.current,
-        { y: -100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, ease: "power4.out" }
-      )
-    }
-    
-    // Setup the mobile menu animation timeline
-    if (mobileMenuRef.current) {
-      // Initial state: scaled down, faded out
-      menuAnimation
-        .set(mobileMenuRef.current, { display: "block", height: "auto" }) // Set initial display to block
-        .to(mobileMenuRef.current, { 
-          opacity: 1, 
-          duration: 0.3,
-          height: "auto", // Animate height for smooth open/close
-          ease: "power2.inOut" 
-        })
-        // Stagger the links inside the menu
-        .from(mobileMenuRef.current.children[0].children, {
-          y: -10,
-          opacity: 0,
-          stagger: 0.08,
-          duration: 0.2,
-          ease: "power2.out",
-        }, "<") // Start link stagger with the menu open animation
-    }
-  }, [menuAnimation])
+  const navItem =
+    "flex items-center gap-2 cursor-pointer text-gray-200 hover:text-indigo-400 transition-all duration-300"
 
-  // --- 2. MOBILE MENU STATE HANDLER (GSAP Toggle) ---
-  useEffect(() => {
-    if (open) {
-      menuAnimation.play()
-    } else {
-      // Reverse the timeline when closing
-      menuAnimation.reverse().then(() => {
-        // Optional: Reset element visibility after animation complete
-        gsap.set(mobileMenuRef.current, { display: "none" }) 
-      })
-    }
-  }, [open, menuAnimation])
-  
-  // Base class for navigation items (Desktop & Mobile)
-  const navItemClass = 
-    "flex items-center gap-2 cursor-pointer text-gray-300 transition-all duration-300 relative group"
-  
-  // Function to handle link click on mobile
-  const handleMobileClick = (id: string) => {
-      setOpen(false) // Close the menu
-      // ScrollLink handles the actual scroll logic
-  }
-
-  // --- 3. RENDER FUNCTION ---
   return (
     <nav
       ref={navRef}
-      className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-[95%] max-w-7xl"
+      className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl"
     >
-      <div className="backdrop-blur-xl bg-black/40 border border-white/10 rounded-xl shadow-2xl px-6 py-4 flex justify-between items-center">
-        
+      <div className="backdrop-blur-xl bg-black/40 border border-white/10 rounded-2xl shadow-2xl px-6 py-4 flex justify-between items-center">
         {/* Logo */}
         <Link href="/">
-          <span className="text-3xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-500 cursor-pointer transition-transform duration-300 hover:scale-105">
+          <span className="text-3xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-500 cursor-pointer">
             &lt;OE/&gt;
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-10">
-          {navLinks.map((item) => {
-            const Icon = item.icon
-            return (
-              <ScrollLink 
-                key={item.id}
-                to={item.id} 
-                offset={item.offset} 
-                smooth 
-                duration={700} // Increased duration for a smoother desktop scroll
-                className={`${navItemClass} hover:text-indigo-400 font-medium`}
-              >
-                <Icon size={20} className="text-purple-400 group-hover:text-indigo-400 transition-colors" /> 
-                {item.label}
-                {/* Active/Hover Indicator */}
-                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-400 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></span>
-              </ScrollLink>
-            )
-          })}
+        {/* Desktop */}
+        <div className="hidden md:flex items-center gap-8">
+          <ScrollLink to="home" smooth duration={500} className={navItem}>
+            <Home /> Home
+          </ScrollLink>
+          <ScrollLink to="exp" offset={-80} smooth duration={500} className={navItem}>
+            <Briefcase /> Experience
+          </ScrollLink>
+          <ScrollLink to="about" offset={-80} smooth duration={500} className={navItem}>
+            <User /> About
+          </ScrollLink>
+          <ScrollLink to="skills" offset={-80} smooth duration={500} className={navItem}>
+            <Code /> Skills
+          </ScrollLink>
+          <ScrollLink to="projects" offset={-80} smooth duration={500} className={navItem}>
+            <Folder /> Projects
+          </ScrollLink>
         </div>
 
-        {/* Mobile Toggle Button */}
+        {/* Mobile Button */}
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden text-gray-200 p-2 rounded-lg hover:bg-white/10 transition-colors"
-          aria-label={open ? "Close menu" : "Open menu"}
+          className="md:hidden text-gray-200 hover:text-indigo-400 transition"
         >
-          {open ? <X size={28} className="text-indigo-400" /> : <Menu size={28} className="text-indigo-400" />}
+          {open ? <X /> : <Menu />}
         </button>
       </div>
 
-      {/* Mobile Menu (Hidden by default, controlled by GSAP) */}
+      {/* Mobile Menu */}
       <div
-        ref={mobileMenuRef} // Attach ref for GSAP control
-        style={{ display: 'none', opacity: 0 }} // Initial state for GSAP
-        className={`md:hidden mt-3 backdrop-blur-xl bg-black/80 border border-white/10 rounded-xl shadow-xl p-4`}
+        className={`md:hidden mt-4 overflow-hidden transition-all duration-500 ${
+          open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        }`}
       >
-        <div className="space-y-4">
-          {navLinks.map((item) => {
-            const Icon = item.icon
-            return (
-              <ScrollLink 
-                key={item.id}
-                to={item.id} 
-                offset={item.offset}
-                smooth 
-                duration={500}
-                onClick={() => handleMobileClick(item.id)} // Use specialized click handler
-                className={`${navItemClass} text-xl py-2 px-3 hover:bg-white/5 rounded-lg`}
-              >
-                <Icon size={24} className="text-purple-400" />
-                {item.label}
-              </ScrollLink>
-            )
-          })}
+        <div className="backdrop-blur-xl bg-black/60 border border-white/10 rounded-2xl shadow-xl p-6 space-y-4">
+          <ScrollLink onClick={() => setOpen(false)} to="home" smooth className={navItem}>
+            <Home /> Home
+          </ScrollLink>
+          <ScrollLink onClick={() => setOpen(false)} to="about" smooth className={navItem}>
+            <User /> About
+          </ScrollLink>
+          <ScrollLink onClick={() => setOpen(false)} to="exp" smooth className={navItem}>
+            <Briefcase /> Experience
+          </ScrollLink>
+          <ScrollLink onClick={() => setOpen(false)} to="skills" smooth className={navItem}>
+            <Code /> Skills
+          </ScrollLink>
+          <ScrollLink onClick={() => setOpen(false)} to="projects" smooth className={navItem}>
+            <Folder /> Projects
+          </ScrollLink>
         </div>
       </div>
     </nav>

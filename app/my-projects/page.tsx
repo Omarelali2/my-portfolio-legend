@@ -1,17 +1,18 @@
-import React from "react"
-import Image, { StaticImageData } from "next/image"
+"use client"
 
-// Import your images
-import samsung from "../../public/sumsung.jpg"
-import Gym from "../../public/gym.jpg"
-import education from "../../public/education.jpg"
-import forever from "../../public/store.jpg"
+import Image from "next/image"
+import Link from "next/link"
+import { useEffect, useRef } from "react"
+import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface Project {
   name: string
   description: string
   stack: string[]
-  image: StaticImageData
+  image: string
   live: string
   github: string
 }
@@ -19,8 +20,7 @@ interface Project {
 const projects: Project[] = [
   {
     name: "Samsung Clone",
-    description:
-      "Full-stack Samsung store (attention: not official and is opened in desktop mode only)",
+    description: "Full‑stack Samsung store (demo project – desktop only).",
     stack: [
       "React",
       "Node.js",
@@ -29,101 +29,134 @@ const projects: Project[] = [
       "Cloudinary",
       "Stripe",
       "TailwindCSS",
-      "React Router",
     ],
-    image: samsung,
+    image: "/phone.webp",
     live: "https://sumsung-store-frontend-i3ov.vercel.app/",
     github: "https://github.com/Omarelali2/sumsung-store-backend",
   },
   {
     name: "Gym System",
     description:
-      "Full-stack Power Fit : Clean design, easy to use, perfect for anyone motivated at the gym.",
-    stack: [
-      "Next.js",
-      "Prisma PostgreSQL",
-      "Cloudinary",
-      "Stripe",
-      "TailwindCSS",
-    ],
-    image: Gym,
+      "Power Fit platform with clean UI, payments and media handling.",
+    stack: ["Next.js", "Prisma", "PostgreSQL", "Stripe", "TailwindCSS"],
+    image: "/OIP.webp",
     live: "https://gymleb.vercel.app/",
     github: "https://github.com/Omarelali2/the-big-gym",
   },
   {
-    name: "University Education",
-    description: "A simple education website",
-    stack: ["React", "CSS"],
-    image: education,
-    live: "https://education-rho-six.vercel.app/",
-    github: "https://github.com/Omarelali2/education",
-  },
-  {
     name: "Clothing Store",
-    description: "A simple clothing store",
-    stack: ["React", "CSS", "TailwindCSS", "React Router"],
-    image: forever,
+    description: "Minimal e‑commerce UI for clothing products.",
+    stack: ["React", "TailwindCSS", "React Router"],
+    image: "/OIP (1).webp",
     live: "https://buy-products-six.vercel.app/",
     github: "https://github.com/Omarelali2/Buy_products",
   },
+  {
+    name: "CodeLeb",
+    description:
+      "Community platform for developers in Lebanon. we built with my friends in team during internship with TechTacks.",
+    stack: ["Next.js", "PostgreSQL", "TailwindCSS"],
+    image: "/OIP3.jpg",
+    live: "https://codeleb.vercel.app/",
+    github: "https://github.com/AZZAM-K/codeleb",
+  },
+  {
+    name: "University Education",
+    description: "Simple educational website with responsive layout.",
+    stack: ["React", "CSS"],
+    image: "/education.avif",
+    live: "https://education-rho-six.vercel.app/",
+    github: "https://github.com/Omarelali2/education",
+  },
 ]
 
-const Projects: React.FC = () => {
+export default function Projects() {
+  const cardsRef = useRef<HTMLDivElement[]>([])
+
+  useEffect(() => {
+    cardsRef.current.forEach((card, i) => {
+      gsap.fromTo(
+        card,
+        { opacity: 0, y: 80 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          delay: i * 0.15,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 85%",
+          },
+        }
+      )
+    })
+  }, [])
+
   return (
-    <section className='bg-gradient-to-r from-slate-900 to-indigo-950 py-16 px-6'>
-      <div className='max-w-7xl mx-auto text-center mt-10'>
-        <h2 className='text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 mb-12'>
-          My Projects
+    <section className='bg-gradient-to-br from-slate-950 via-indigo-950 to-black py-24 px-6'>
+      <div className='max-w-7xl mx-auto'>
+        <h2 className='text-center text-5xl font-extrabold mb-20 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 mt-10'>
+          All Projects
         </h2>
-        <div className='grid grid-cols-1 sm:grid-cols-2 mt-15 lg:grid-cols-2 xl:grid-cols-2 gap-10'>
-          {projects.map(project => (
+
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-14'>
+          {projects.map((project, index) => (
             <div
               key={project.name}
-              className='bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden group transition-all duration-500 hover:shadow-2xl hover:-translate-y-2'
+              ref={el => {
+                if (el) cardsRef.current[index] = el
+              }}
+              className='group relative rounded-2xl overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl transition'
             >
-              <div className='relative w-full h-64 overflow-hidden'>
+              {/* Image */}
+              <div className='relative h-72 overflow-hidden'>
                 <Image
                   src={project.image}
                   alt={project.name}
-                  layout='fill'
-                  objectFit='cover'
-                  className='transition-transform duration-500 group-hover:scale-110'
+                  fill
+                  className='object-cover transition-transform duration-700 group-hover:scale-110'
                 />
+                <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent' />
               </div>
-              <div className='p-6 text-left'>
-                <h3 className='text-2xl font-semibold text-gray-900 dark:text-white mb-2 transition-colors duration-300 group-hover:text-blue-600'>
+
+              {/* Content */}
+              <div className='p-8'>
+                <h3 className='text-3xl font-bold text-white mb-3'>
                   {project.name}
                 </h3>
-                <p className='text-gray-700 dark:text-gray-300 mb-4'>
+
+                <p className='text-gray-300 leading-relaxed mb-6'>
                   {project.description}
                 </p>
-                <div className='flex flex-wrap gap-2 mb-4'>
+
+                <div className='flex flex-wrap gap-2 mb-8'>
                   {project.stack.map(tech => (
                     <span
                       key={tech}
-                      className='bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm px-3 py-1 rounded-full transition-colors duration-300 hover:bg-blue-100 dark:hover:bg-blue-700'
+                      className='text-sm px-3 py-1 rounded-full bg-white/10 text-gray-200 border border-white/10'
                     >
                       {tech}
                     </span>
                   ))}
                 </div>
+
                 <div className='flex gap-4'>
-                  <a
+                  <Link
                     href={project.live}
                     target='_blank'
-                    rel='noopener noreferrer'
-                    className='bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors duration-700 transform hover:scale-105'
+                    className='flex-1 text-center rounded-xl py-3 font-semibold text-white bg-blue-600 hover:bg-blue-700 transition'
                   >
-                    Live
-                  </a>
-                  <a
+                    Live Demo
+                  </Link>
+
+                  <Link
                     href={project.github}
                     target='_blank'
-                    rel='noopener noreferrer'
-                    className='bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-full shadow-lg transition-colors duration-700 transform hover:scale-105'
+                    className='flex-1 text-center rounded-xl py-3 font-semibold text-white bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:opacity-90 transition'
                   >
                     GitHub
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -133,5 +166,3 @@ const Projects: React.FC = () => {
     </section>
   )
 }
-
-export default Projects

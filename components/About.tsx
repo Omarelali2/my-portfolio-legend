@@ -1,181 +1,134 @@
 "use client"
 
-// --- DEPENDENCIES ---
 import Image from "next/image"
-import React, { useRef, useEffect } from "react"
+import { useRef, useEffect } from "react"
 import { gsap } from "gsap"
+import { ScrollTrigger } from "gsap/ScrollTrigger"
+
+gsap.registerPlugin(ScrollTrigger)
 
 /**
- * @file About.tsx
- * @description Renders the 'About Me' section of the portfolio. Implements GSAP for sophisticated
- * scroll-based entrance and continuous image animation effects.
- * @component
+ * About Section – Professional Portfolio Version
+ * - Scroll-triggered cinematic entrance
+ * - Subtle continuous image glow
+ * - Clean typography hierarchy
  */
-const About: React.FC = () => {
-  // --- 1. DOM REFS FOR ANIMATION TARGETING ---
-  // Using explicit typing for the HTML elements targeted by GSAP.
-  const contentRef = useRef<HTMLDivElement>(null)
-  const imageRef = useRef<HTMLDivElement>(null)
-  const textRef = useRef<HTMLDivElement>(null)
+export default function About() {
+  const sectionRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
+  const imageWrapRef = useRef<HTMLDivElement>(null)
+  const textRef = useRef<HTMLDivElement>(null)
 
-  // --- 2. GSAP ANIMATION IMPLEMENTATION ---
   useEffect(() => {
-    // Ensure all target elements are mounted before running animations.
-    if (!headingRef.current || !imageRef.current || !textRef.current) return
+    if (!sectionRef.current) return
 
-    // Initialize the GSAP Timeline for sequenced entrance effects.
-    const tl = gsap.timeline({
-      defaults: {
-        duration: 1.2,
-        ease: "power3.out",
-      },
-    })
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 70%",
+        },
+        defaults: { ease: "power3.out" },
+      })
 
-    // Sequence 1: Main Header Entrance
-    tl.from(
-      headingRef.current,
-      {
-        y: -30,
+      tl.from(headingRef.current, {
+        y: -40,
         opacity: 0,
-        duration: 0.8,
-      },
-      0
-    ) // Starts immediately
+        duration: 0.9,
+      })
+        .from(
+          imageWrapRef.current,
+          {
+            x: -120,
+            opacity: 0,
+            scale: 0.85,
+            duration: 1.2,
+          },
+          "-=0.3"
+        )
+        .from(
+          textRef.current?.children || [],
+          {
+            x: 120,
+            opacity: 0,
+            stagger: 0.25,
+            duration: 1,
+          },
+          "-=0.9"
+        )
 
-    // Sequence 2: Image and Text Block Slide-In (Parallel start)
-    tl.from(
-      imageRef.current,
-      {
-        x: -100, // Image slides from the left
-        opacity: 0,
-        scale: 0.8,
-        duration: 1.2,
-        ease: "power2.out",
-      },
-      0.3
-    ) // Starts 0.3s after the header
+      
+    }, sectionRef)
 
-    // Sequence 3: Staggered Paragraph Entrance
-    tl.from(
-      textRef.current.children,
-      {
-        x: 100, // Text slides from the right
-        opacity: 0,
-        stagger: 0.3, // Key for professional staggered readability
-        duration: 1.2,
-        ease: "power2.out",
-      },
-      0.3
-    ) // Starts concurrently with the image
-
-    // Continuous Animation: Subtle Breathing Glow Effect on Image Border
-    // This runs independently of the entrance timeline.
-    gsap.to(imageRef.current, {
-      boxShadow:
-        "0 0 40px rgba(74, 222, 128, 0.5), 0 0 80px rgba(99, 102, 241, 0.4)",
-      yoyo: true,
-      repeat: -1, // Infinite loop
-      duration: 4,
-      ease: "sine.inOut", // Smooth, cyclical easing
-    })
-
-    // Return a cleanup function for React component unmounting.
-    return () => {
-      tl.kill()
-      gsap.killTweensOf(imageRef.current) // Ensure continuous loop is terminated
-    }
+    return () => ctx.revert()
   }, [])
 
   return (
     <section
-      id='about'
-      className='about bg-slate-900 text-white py-16 px-4 md:py-28 scroll-mt-20 overflow-hidden relative'
+      ref={sectionRef}
+      id="about"
+      className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-indigo-950 to-black py-24 px-6"
     >
-      {/* Subtle Background Pattern for Visual Depth */}
-      <div className='absolute inset-0 bg-dots-pattern opacity-5'></div>
+      {/* subtle grid */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,.06)_1px,transparent_0)] [background-size:40px_40px] opacity-10" />
 
-      <div
-        ref={contentRef}
-        className='container mx-auto max-w-7xl flex flex-col items-center gap-16 md:gap-20'
-      >
-        {/* Component Title */}
+      <div className="relative max-w-7xl mx-auto flex flex-col items-center gap-20">
+        {/* Title */}
         <h2
           ref={headingRef}
-          className='text-4xl sm:text-5xl font-extrabold mb-4 text-center tracking-tighter'
+          className="text-center text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-indigo-400 to-purple-500"
         >
-          <span className='pb-4 border-b-4 border-purple-500 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-indigo-500'>
-            About Me
-            
-          </span>
+          About Me
         </h2>
 
-        {/* Content Layout: Image and Text */}
-        <div className='flex flex-col md:flex-row items-center md:items-start gap-12 w-full'>
-          {/* Image/Logo Section (Left) */}
-          <div
-            ref={imageRef}
-            className='flex-1 flex justify-center md:justify-start'
-          >
-            <div className='w-64 h-64 sm:w-80 sm:h-80 md:w-full md:h-full  transition-all duration-500  hover:scale-[1.02]'>
-              <div className='w-full h-full overflow-hidden  flex items-center justify-center'>
-                <Image
-                  width={500}
-                  height={500}
-                  unoptimized
-                  src='/logo.jpg'
-                  alt="Omar's Logo representing his software development focus."
-                  className='w-full h-full object-contain p-8 transform transition-transform duration-500 hover:rotate-3'
-                />
-              </div>
+        <div className="flex flex-col md:flex-row items-center gap-16 w-full">
+          {/* Image */}
+            <div className="rounded-2xl w-[50%] bg-white/5 backdrop-blur-xl border border-white/10 p-6 transition-transform duration-500 hover:scale-[1.03]">
+              <Image
+                src="/logo.jpg"
+                alt="Omar El-Ali logo"
+                width={600}
+                height={420}
+                className="object-contain w-full h-auto rounded-2xl shadow-lg"
+                priority
+              />
             </div>
-          </div>
 
+          {/* Text */}
           <div
             ref={textRef}
-            className='flex-1 text-center md:text-left space-y-8 pt-4'
+            className="flex-1 space-y-8 text-center md:text-left"
           >
-            <p className='text-lg sm:text-xl text-gray-300 max-w-prose mx-auto md:mx-0 leading-relaxed font-medium border-l-4 border-teal-400 pl-4'>
-              Hello. I am{" "}
-              <span className='text-teal-400 font-bold'>Omar El-Ali</span>, a
-              Computer Science graduate progressing through my **Masters in
-              Software Engineering** at the Lebanese University. My professional
-              foundation is built on transforming complex requirements into
-              functional, scalable software solutions.
+            <p className="text-xl leading-relaxed text-gray-300 border-l-4 border-teal-400 pl-6">
+              Hello, I am <span className="text-teal-400 font-semibold">Omar El‑Ali</span>,
+              a Computer Science graduate currently pursuing a <strong>Master’s in
+              Software Engineering</strong> at the Lebanese University. I specialize
+              in transforming complex ideas into scalable, production‑ready
+              software solutions.
             </p>
 
-            <p className='text-lg sm:text-xl text-gray-300 max-w-prose mx-auto md:mx-0 leading-relaxed'>
-              As a Junior Full-Stack Developer, my expertise centers on the
-              modern MERN stack ecosystem and specialized Next.js applications,
-              encompassing both client-side interactivity and robust server-side
-              architecture.
+            <p className="text-xl leading-relaxed text-gray-300">
+              As a Junior Full‑Stack Developer, my work focuses on the modern
+              JavaScript ecosystem, with strong experience in MERN and
+              performance‑oriented Next.js applications.
             </p>
 
-            <div className='pt-2'>
-              <h3 className='text-2xl font-semibold text-purple-400 mb-4'>
-                Technical Stack Focus:
+            <div className="pt-2">
+              <h3 className="text-2xl font-semibold text-purple-400 mb-4">
+                Technical Focus
               </h3>
-              <ul className='list-disc list-inside space-y-2 text-left mx-auto md:mx-0 max-w-prose text-lg text-gray-300 pl-6'>
-                <li className='pl-2'>
-                  <span className='text-teal-400 font-medium'>
-                    Frontend Development:
-                  </span>{" "}
-                  Leveraging **React.js** and **Next.js** for high-performance,
-                  maintainable user interfaces.
+              <ul className="space-y-3 text-lg text-gray-300">
+                <li>
+                  <span className="text-teal-400 font-medium">Frontend:</span>{" "}
+                  React.js & Next.js for fast, maintainable interfaces
                 </li>
-                <li className='pl-2'>
-                  <span className='text-teal-400 font-medium'>
-                    Backend/API Design:
-                  </span>{" "}
-                  Utilizing **Node.js** and **Next.js API Routes** to build
-                  secure and efficient data services.
+                <li>
+                  <span className="text-teal-400 font-medium">Backend:</span>{" "}
+                  Node.js & Next.js API routes with clean architecture
                 </li>
-                <li className='pl-2'>
-                  <span className='text-teal-400 font-medium'>
-                    Core Philosophy:
-                  </span>{" "}
-                  Committing to clean code, modular design, and iterative
-                  development processes.
+                <li>
+                  <span className="text-teal-400 font-medium">Principles:</span>{" "}
+                  Clean code, modular design, and scalable systems
                 </li>
               </ul>
             </div>
@@ -185,5 +138,3 @@ const About: React.FC = () => {
     </section>
   )
 }
-
-export default About
