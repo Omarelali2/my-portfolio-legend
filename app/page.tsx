@@ -39,7 +39,7 @@ const SectionBridge = ({
   }
 
   return (
-    <section className="relative flex flex-col items-center justify-center overflow-hidden bg-black py-20 text-center md:py-28">
+    <section className='relative flex flex-col items-center justify-center overflow-hidden bg-black py-20 text-center md:py-28'>
       <div
         className={`pointer-events-none absolute h-[260px] w-[520px] rounded-full blur-[120px] ${glowClasses[glowColor]}`}
       />
@@ -49,7 +49,7 @@ const SectionBridge = ({
         whileInView={{ scaleY: 1, opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.9, ease: "easeInOut" }}
-        className="mb-10 h-20 w-px origin-top bg-gradient-to-b from-transparent via-white/15 to-transparent"
+        className='mb-10 h-20 w-px origin-top bg-gradient-to-b from-transparent via-white/15 to-transparent'
       />
 
       <motion.div
@@ -57,13 +57,13 @@ const SectionBridge = ({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 max-w-2xl px-6"
+        className='relative z-10 max-w-2xl px-6'
       >
-        <p className="mb-4 text-[10px] font-black uppercase tracking-[0.32em] text-zinc-600">
+        <p className='mb-4 text-[10px] font-black uppercase tracking-[0.32em] text-zinc-600'>
           {label}
         </p>
 
-        <h3 className="text-xl font-light italic leading-relaxed text-zinc-400 md:text-2xl">
+        <h3 className='text-xl font-light italic leading-relaxed text-zinc-400 md:text-2xl'>
           {title}
         </h3>
       </motion.div>
@@ -73,7 +73,7 @@ const SectionBridge = ({
         whileInView={{ scaleY: 1, opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.9, delay: 0.25, ease: "easeInOut" }}
-        className="mt-10 h-20 w-px origin-top bg-gradient-to-b from-transparent via-white/15 to-transparent"
+        className='mt-10 h-20 w-px origin-top bg-gradient-to-b from-transparent via-white/15 to-transparent'
       />
     </section>
   )
@@ -81,58 +81,46 @@ const SectionBridge = ({
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black text-white selection:bg-blue-500/30">
+    <main className='relative min-h-screen overflow-hidden bg-black text-white selection:bg-blue-500/30'>
       <div className="pointer-events-none fixed inset-0 z-[1] opacity-[0.025] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
-
-      <div className="relative z-10">
+      <div className='relative z-10'>
+        {" "}
         <HomeBanner />
-
         <SectionBridge
-          label="01 // About"
-          title="I build products from clean architecture to polished user experience."
-          glowColor="blue"
+          label='01 // About'
+          title='I build products from clean architecture to polished user experience.'
+          glowColor='blue'
         />
-
         <SectionReveal>
           <About />
         </SectionReveal>
-
         <SectionBridge
-          label="02 // Selected Work"
-          title="A focused collection of full-stack, SaaS, AI, and interface projects."
-          glowColor="zinc"
+          label='02 // Selected Work'
+          title='A focused collection of full-stack, SaaS, AI, and interface projects.'
+          glowColor='zinc'
         />
-
         <SectionReveal>
           <TopProjects />
         </SectionReveal>
-
         <SectionBridge
-          label="03 // Founder Project"
-          title="LebNexis Tahaddiyat turns learning into real-world execution."
-          glowColor="purple"
+          label='03 // Founder Project'
+          title='LebNexis Tahaddiyat turns learning into real-world execution.'
+          glowColor='purple'
         />
-
         <SectionReveal>
           <LebNexisSection />
         </SectionReveal>
-
         <SectionBridge
-          label="04 // Technical Stack"
-          title="The tools and systems behind the products I build."
-          glowColor="blue"
+          label='04 // Technical Stack'
+          title='The tools and systems behind the products I build.'
+          glowColor='blue'
         />
-
         <SectionReveal>
           <Skills />
         </SectionReveal>
-
-      
-
         <SectionReveal>
           <Contact />
         </SectionReveal>
-
         <Footer />
       </div>
     </main>

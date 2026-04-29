@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom gradient animation for text */
+@keyframes gradient-move {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-move 3.5s ease-in-out infinite;
+}
+
+/* Magnetic button effect (basic, can be enhanced with JS) */
+.magnetic-btn {
+  will-change: transform;
+  transition: transform 0.18s cubic-bezier(0.16,1,0.3,1);
+}
+
+.magnetic-btn:active {
+  transform: scale(0.97);
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(20, 30, 40, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 234, 255, 0.12);
+  backdrop-filter: blur(8px);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Custom cursor (optional, premium feel) */
+.cursor-premium {
+  cursor: url('/images/cursor-premium.svg'), auto;
+}

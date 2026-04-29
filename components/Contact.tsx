@@ -1,6 +1,5 @@
 "use client"
 
-import React from "react"
 import { motion } from "framer-motion"
 import { ArrowRight, Github, Linkedin, Mail, MapPin } from "lucide-react"
 import Link from "next/link"
@@ -17,11 +16,11 @@ export default function Contact() {
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-[0.06] [mask-image:radial-gradient(circle_at_center,white,transparent_75%)]" />
       </div>
 
-      <div className="container relative z-10 mx-auto max-w-7xl px-6 md:px-8">
+      <div className="container relative z-10 mx-auto w-full md:px-6 ">
         <div className="group relative">
-          <div className="absolute -inset-px rounded-[2.5rem] bg-gradient-to-r from-blue-600/30 via-white/10 to-purple-600/30 opacity-40 blur-xl transition-opacity duration-700 group-hover:opacity-70" />
+          <div className="absolute -inset-px bg-gradient-to-r from-blue-600/30 via-white/10 to-purple-600/30 opacity-40 blur-xl transition-opacity duration-700 group-hover:opacity-70" />
 
-          <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-zinc-950/90 px-6 py-16 text-center backdrop-blur-xl md:px-16 md:py-24">
+          <div className="relative overflow-hidden md:rounded-2xl border border-white/10 bg-zinc-950/90 px-6 py-16 text-center backdrop-blur-xl md:px-16 md:py-24">
             <div className="absolute right-0 top-0 h-80 w-80 translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-[100px]" />
             <div className="absolute bottom-0 left-0 h-80 w-80 -translate-x-1/2 translate-y-1/2 rounded-full bg-purple-500/10 blur-[100px]" />
 

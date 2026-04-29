@@ -163,7 +163,7 @@ export default function LebNexisSection() {
           {/* Preview */}
           <motion.div
             variants={fadeInUp as any}
-            className="order-1 lg:order-2 lg:col-span-6"
+            className="order-1 lg:order-2 lg:col-span-6 md:block hidden"
           >
             <div className="group relative">
               <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-zinc-950 shadow-2xl">

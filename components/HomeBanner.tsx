@@ -14,7 +14,7 @@ const HomeBanner = () => {
     <section
       id="home"
       className="relative min-h-screen  flex items-center justify-center overflow-hidden bg-black px-6 py-32 text-white"
-    >
+    >      
       {/* Background */}
       <motion.div
         style={{ opacity }}

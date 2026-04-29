@@ -63,7 +63,7 @@ export default function Navbar() {
               onClick={closeMenu}
               className='group flex items-center gap-3'
             >
-              <div className='relative h-10 w-10 border-2 px-6 py-6 md:px-5 md:py-5 border-white/10 rounded-full flex items-center justify-center bg-zinc-900 group-hover:bg-white transition-colors'>
+              <div className='relative h-10 w-10 border-2 px-6 py-6 md:px-5 md:py-5 border-white/10 rounded-full flex items-center justify-center bg-zinc-900 group-hover:bg-white/10 transition-colors'>
                 <h1 className='absolute inset-0 flex items-center justify-center text-2xl md:text-xl font-black text-white'>
                   O
                   <span className='text-blue-500'>
