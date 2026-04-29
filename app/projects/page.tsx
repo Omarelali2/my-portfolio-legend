@@ -26,6 +26,20 @@ const projects = [
     live: "https://sumsung-store-frontend-i3ov.vercel.app/",
     github: "https://github.com/Omarelali2/sumsung-store-backend",
   },
+
+  {
+    name: "LebSpace",
+    type: "Social Platform",
+    role: "Founder & Full-Stack Developer",
+    description:
+      "A social platform for Lebanese developers focused on community, projects, and real-world learning.",
+    impact: "Developer community",
+    tags: ["Social", "Community", "Full-Stack"],
+    stack: ["Next.js", "TypeScript", "PostgreSQL", "Tailwind"],
+    image: "/social.jpeg",
+    live: "https://lebspace.vercel.app/",
+    github: "https://github.com/AZZAM-K/LebSpace",
+  },
   {
     name: "PowerPulse Gym",
     type: "Management SaaS",
@@ -65,6 +79,32 @@ const projects = [
     live: "https://buy-products-six.vercel.app/",
     github: "https://github.com/Omarelali2/Buy_products",
   },
+  {
+    name: "Personal Portfolio",
+    type: "Interface & Systems",
+    role: "Frontend Developer",
+    description:
+      "My personal portfolio built with a focus on clean architecture, motion, and a polished product experience.",
+    impact: "Personal Branding",
+    tags: ["Interface", "Systems", "Full-Stack"],
+    stack: ["Next.js", "TypeScript", "Framer Motion", "Tailwind"],
+    image: "/portofio-example.jpeg",
+    live: "https://your-portfolio-link.vercel.app/",
+    github: "https://github.com/your-username/your-portfolio",
+  },
+  {
+    name: "Education Platform",
+    type: "Landing Page",
+    role: "Frontend Developer",
+    description:
+      "A landing page for an education platform focused on clean design, responsive layouts, and conversion optimization.",
+    impact: "Personel Branding",
+    tags: ["Landing Page", "Frontend", "UI/UX"],
+    stack: ["React", "Tailwind", "Framer Motion"],
+    image: "/edu.jpeg",
+    live: "https://education-rho-six.vercel.app/",
+    github: "https://github.com/Omarelali2/education",
+  },
 ]
 
 function ProjectCard({ project, index }: { project: any; index: number }) {
@@ -80,8 +120,8 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
       viewport={{ once: true, margin: "-80px" }}
       className='group relative flex h-full flex-col'
     >
-      <div className='relative mb-8 overflow-hidden rounded-[2rem] border border-white/10 bg-zinc-950 shadow-2xl'>
-        <div className='relative aspect-[16/9] overflow-hidden bg-black'>
+      <div className='relative  mb-8 overflow-hidden rounded-[2rem] border border-white/10 bg-zinc-950 shadow-2xl'>
+        <div className="relative aspect-[16/9] overflow-hidden rounded-3xl bg-black">
           <Image
             src={project.image}
             alt={project.name}

@@ -1,10 +1,11 @@
 import "./globals.css"
 import Navbar from "@/components/Navbar"
 import type { Metadata } from "next"
+import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider"
 
 export const metadata: Metadata = {
-  title: "Omar El-Ali ",
-  description: "My personal portfolio",
+  title: "Omar El-Ali | Senior Full-Stack Engineer",
+  description: "Crafting premium digital experiences with precision and motion.",
   icons: {
     icon: "/Omar.webp",
   },
@@ -16,11 +17,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className="scroll-smooth">
+      <body
+        className="antialiased selection:bg-white/10 selection:text-white"
+        suppressHydrationWarning
+      >
         <Navbar />
-        {children}
+        <SmoothScrollProvider>
+          {children}
+        </SmoothScrollProvider>
       </body>
     </html>
   )
 }
+

@@ -1,93 +1,175 @@
 "use client"
 
+import React, { useRef } from "react"
+import { motion, useScroll, useTransform } from "framer-motion"
 import Image from "next/image"
-import React, { useEffect, useRef } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { Code2, Database, Layers3, Server, Sparkles, Workflow } from "lucide-react"
 
-gsap.registerPlugin(ScrollTrigger)
-
-interface Skill {
-  name: string
-  logo: string
-}
-
-const skillsData: Skill[] = [
+const skills = [
   { name: "JavaScript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
   { name: "TypeScript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
   { name: "React", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
   { name: "Next.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
   { name: "Node.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
-  { name: "Express", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" },
-  { name: "MongoDB", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
   { name: "PostgreSQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
-  { name: "Git", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" },
-  { name: "Tailwind", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" },
+  { name: "Tailwind CSS", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" },
+  { name: "Prisma", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prisma/prisma-original.svg" },
+  { name: "Framer Motion", logo: "https://www.framer.com/favicon.ico" },
+  { name: "Three.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/threejs/threejs-original.svg" },
 ]
 
+const focusAreas = [
+  {
+    icon: Code2,
+    title: "Frontend Engineering",
+    text: "Responsive interfaces, clean components, motion, accessibility, and polished product UX.",
+  },
+  {
+    icon: Server,
+    title: "Backend Systems",
+    text: "APIs, authentication flows, business logic, validation, integrations, and scalable server patterns.",
+  },
+  {
+    icon: Database,
+    title: "Database Design",
+    text: "Relational models, Prisma schemas, PostgreSQL queries, migrations, and production-ready data layers.",
+  },
+  {
+    icon: Workflow,
+    title: "Product Architecture",
+    text: "Building full systems around user journeys, admin dashboards, permissions, notifications, and growth.",
+  },
+]
+
+function SkillPill({ skill }: { skill: { name: string; logo: string } }) {
+  return (
+    <div className="group flex shrink-0 cursor-default items-center gap-4 rounded-full border border-white/10 bg-white/[0.03] px-7 py-4 backdrop-blur-md transition-all hover:border-white/20 hover:bg-white/[0.06]">
+      <div className="relative h-6 w-6 grayscale transition-all duration-500 group-hover:grayscale-0">
+        <Image
+          src={skill.logo}
+          alt={skill.name}
+          fill
+          className="object-contain"
+        />
+      </div>
+
+      <span className="text-sm font-semibold text-zinc-400 transition-colors group-hover:text-white">
+        {skill.name}
+      </span>
+    </div>
+  )
+}
+
 export default function Skills() {
-  const sectionRef = useRef<HTMLDivElement | null>(null)
-  const cardsRef = useRef<HTMLDivElement[]>([])
+  const targetRef = useRef(null)
 
-  useEffect(() => {
-    if (!sectionRef.current) return
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start end", "end start"],
+  })
 
-    gsap.fromTo(
-      cardsRef.current,
-      { opacity: 0, y: 80, scale: 0.8 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 1,
-        ease: "power3.out",
-        stagger: 0.12,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 75%",
-        },
-      }
-    )
-  }, [])
+  const x = useTransform(scrollYProgress, [0, 1], [120, -120])
+  const xReverse = useTransform(scrollYProgress, [0, 1], [-120, 120])
 
   return (
     <section
-      ref={sectionRef}
-      className="relative py-24 px-6 bg-gradient-to-br from-black via-indigo-950 to-black overflow-hidden"
+      ref={targetRef}
+      id="skills"
+      className="relative overflow-hidden border-y border-white/10 bg-black py-32 text-white md:py-44"
     >
-      {/* Glow background */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.25),transparent_60%)]" />
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-0 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-blue-600/10 blur-[150px]" />
+        <div className="absolute bottom-0 right-0 h-[420px] w-[420px] rounded-full bg-purple-600/10 blur-[140px]" />
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-[0.06] [mask-image:radial-gradient(circle_at_center,white,transparent_75%)]" />
+      </div>
 
-      <div className="relative max-w-7xl mx-auto text-center">
-        <h2 className="text-4xl md:text-5xl font-extrabold mb-16 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-500">
-          Skills & Tech Stack
-        </h2>
+      <div className="container relative z-10 mx-auto max-w-7xl px-6 md:px-8">
+        <div className="mx-auto mb-20 max-w-4xl text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-6 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2.5 backdrop-blur-md"
+          >
+            <Sparkles size={14} className="text-blue-400" />
+            <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-zinc-400">
+              Technical Stack
+            </span>
+          </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-10">
-          {skillsData.map((skill, i) => (
-            <div
-              key={skill.name}
-              ref={el => {
-                if (el) cardsRef.current[i] = el
-              }}
-              className="group relative flex flex-col items-center justify-center p-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-lg transition-all duration-500 hover:-translate-y-4 hover:scale-110"
-            >
-              {/* Neon glow */}
-              <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-r from-indigo-500/30 via-purple-500/30 to-pink-500/30 blur-xl" />
+          <motion.h2
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            className="text-5xl font-black uppercase leading-[0.9] tracking-[-0.06em] md:text-7xl lg:text-8xl"
+          >
+            Tools I use to
+            <br />
+            <span className="bg-gradient-to-r from-zinc-200 via-zinc-500 to-zinc-800 bg-clip-text italic text-transparent">
+              build real products.
+            </span>
+          </motion.h2>
 
-              <Image
-                src={skill.logo}
-                alt={skill.name}
-                width={64}
-                height={64}
-                className="relative z-10 w-16 h-16 mb-4 group-hover:rotate-12 transition duration-500"
-              />
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.7 }}
+            viewport={{ once: true }}
+            className="mx-auto mt-7 max-w-2xl text-base leading-7 text-zinc-500 md:text-lg"
+          >
+            My stack is focused on modern full-stack development: fast
+            interfaces, reliable APIs, clean databases, and scalable SaaS
+            architecture.
+          </motion.p>
+        </div>
 
-              <span className="relative z-10 text-gray-200 font-semibold tracking-wide">
-                {skill.name}
-              </span>
-            </div>
-          ))}
+        <div className="relative mb-16 space-y-5">
+          <motion.div style={{ x }} className="flex gap-4">
+            {skills.concat(skills).map((skill, index) => (
+              <SkillPill key={`${skill.name}-${index}`} skill={skill} />
+            ))}
+          </motion.div>
+
+          <motion.div style={{ x: xReverse }} className="flex justify-end gap-4">
+            {skills.concat(skills).reverse().map((skill, index) => (
+              <SkillPill key={`${skill.name}-${index}-reverse`} skill={skill} />
+            ))}
+          </motion.div>
+
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-black to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-black to-transparent" />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {focusAreas.map((item, index) => {
+            const Icon = item.icon
+
+            return (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: index * 0.1,
+                  duration: 0.75,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                viewport={{ once: true }}
+                className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md transition-all hover:border-white/20 hover:bg-white/[0.06]"
+              >
+                <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-black">
+                  <Icon size={22} />
+                </div>
+
+                <h3 className="mb-3 text-sm font-black uppercase tracking-[0.18em] text-white">
+                  {item.title}
+                </h3>
+
+                <p className="text-sm leading-6 text-zinc-500">{item.text}</p>
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </section>
