@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Omar El-Ali | Senior Full-Stack Engineer",
   description: "Crafting premium digital experiences with precision and motion.",
   icons: {
-    icon: "/Omar.webp",
+    icon: "/images/logoofme.png",
   },
 }
 
