@@ -1,8 +1,7 @@
 "use client"
 
 import React, { useEffect, useRef } from "react"
-import { motion } from "framer-motion"
-import { ArrowLeft, Terminal, Cpu, Info } from "lucide-react"
+import { ArrowLeft, Cpu, Info } from "lucide-react"
 import Link from "next/link"
 
 export default function NeuralWeightViz() {

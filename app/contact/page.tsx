@@ -2,110 +2,169 @@
 
 import React from "react"
 import { motion } from "framer-motion"
-import { fadeInUp, stagger } from "@/lib/motion"
-import { Mail, ArrowRight, Github, Linkedin, Twitter, Globe, Server, Cpu } from "lucide-react"
+import { Mail, ArrowRight, Github, Linkedin, MapPin } from "lucide-react"
+import { EASE } from "@/lib/motion"
+
+const inputClass =
+  "w-full border-b border-white/10 bg-transparent py-4 text-xl font-light text-white outline-none transition-colors duration-300 focus:border-accent placeholder:text-zinc-600"
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-black text-white pt-32 pb-20">
-      <div className="container mx-auto px-8 max-w-7xl">
-        <motion.div initial="initial" animate="animate" variants={stagger()}>
-           <motion.p className="text-blue-500 font-mono text-xs uppercase tracking-[0.4em] mb-4">
-              / Connect System
-           </motion.p>
-           <motion.h1  className="text-6xl md:text-8xl font-black tracking-tighter mb-20 leading-[0.85]">
-              LET&apos;S <span className="text-zinc-800">SYNC.</span>
-           </motion.h1>
+    <main className="relative overflow-hidden bg-base pb-28 pt-32 md:pt-40">
+      <div className="pointer-events-none absolute inset-0">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 55% 40% at 50% 0%, rgba(183,255,60,0.06), transparent 70%)",
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: EASE }}
+        >
+          <div className="mb-6 flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.32em]">
+            <span className="text-accent">—</span>
+            <span className="text-zinc-600">Connect</span>
+            <span className="h-px w-14 bg-white/15" aria-hidden />
+          </div>
+
+          <h1 className="mb-10 text-[clamp(3rem,7vw,6.5rem)] font-bold uppercase leading-[0.88] tracking-[-0.04em] text-white">
+            Let&apos;s
+            <br />
+            <span className="text-accent">sync.</span>
+          </h1>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
-           <div className="lg:col-span-7 space-y-12">
-              <div className="p-12 rounded-[3rem] bg-zinc-950 border border-white/5 relative overflow-hidden group">
-                 <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[100px] rounded-full group-hover:bg-blue-600/10 transition-all duration-1000" />
-                 
-                 <h2 className="text-3xl font-bold mb-8 uppercase tracking-tighter">Transmission</h2>
-                 
-                 <form className="space-y-8 relative z-10">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                       <div className="space-y-2">
-                          <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Entity Name</label>
-                          <input type="text" className="w-full bg-transparent border-b border-white/10 py-4 focus:border-blue-500 outline-none transition-colors text-xl font-light" placeholder="John Doe" />
-                       </div>
-                       <div className="space-y-2">
-                          <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Digital Address</label>
-                          <input type="email" className="w-full bg-transparent border-b border-white/10 py-4 focus:border-blue-500 outline-none transition-colors text-xl font-light" placeholder="hello@company.com" />
-                       </div>
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
+          {/* Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: EASE, delay: 0.1 }}
+            className="lg:col-span-7"
+          >
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="rounded-2xl border border-white/[0.08] bg-raised p-8 md:p-10"
+            >
+              <h2 className="mb-10 font-mono text-[11px] uppercase tracking-[0.28em] text-zinc-500">
+                Transmission
+              </h2>
+
+              <div className="space-y-8">
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <label className="font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500">
+                      Entity Name
+                    </label>
+                    <input type="text" className={inputClass} placeholder="John Doe" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500">
+                      Digital Address
+                    </label>
+                    <input type="email" className={inputClass} placeholder="hello@company.com" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500">
+                    Protocol / Project Details
+                  </label>
+                  <textarea
+                    rows={4}
+                    className={`${inputClass} resize-none`}
+                    placeholder="Brief system overview..."
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="group inline-flex w-full items-center justify-center gap-3 rounded-full bg-accent px-8 py-5 text-xs font-bold uppercase tracking-[0.18em] text-black transition-colors duration-300 hover:bg-accent-deep"
+                >
+                  Initialize Connection
+                  <ArrowRight
+                    size={15}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </button>
+              </div>
+            </form>
+          </motion.div>
+
+          {/* Aside */}
+          <div className="space-y-8 lg:col-span-5">
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: EASE, delay: 0.2 }}
+              className="rounded-2xl border border-white/[0.08] bg-raised p-8"
+            >
+              <h3 className="mb-8 border-b border-white/[0.07] pb-4 font-mono text-[10px] uppercase tracking-[0.3em] text-zinc-500">
+                Social Nodes
+              </h3>
+              <div className="space-y-6">
+                {[
+                  { label: "LinkedIn", sub: "Professional Matrix", href: "https://www.linkedin.com/in/omar-elali-28aaa1312/", icon: Linkedin },
+                  { label: "GitHub", sub: "Source Control", href: "https://github.com/omarelali", icon: Github },
+                  { label: "Email", sub: "Direct Line", href: "mailto:elaliomar30@gmail.com", icon: Mail },
+                ].map((item) => (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    target={item.href.startsWith("http") ? "_blank" : undefined}
+                    rel="noreferrer"
+                    className="group flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/[0.08] bg-black/40 transition-colors duration-300 group-hover:border-accent/40">
+                        <item.icon size={16} className="text-zinc-400 transition-colors group-hover:text-accent" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-zinc-200 transition-colors group-hover:text-white">
+                          {item.label}
+                        </p>
+                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-600">
+                          {item.sub}
+                        </p>
+                      </div>
                     </div>
-                    
-                    <div className="space-y-2">
-                       <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Protocol / Project Details</label>
-                       <textarea rows={4} className="w-full bg-transparent border-b border-white/10 py-4 focus:border-blue-500 outline-none transition-colors text-xl font-light resize-none" placeholder="Brief system overview..." />
-                    </div>
-
-                    <button className="w-full py-6 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-xs hover:shadow-[0_0_50px_rgba(255,255,255,0.2)] transition-all">
-                       Initialize Connection
-                    </button>
-                 </form>
+                    <ArrowRight
+                      size={14}
+                      className="text-zinc-700 transition-all duration-300 group-hover:translate-x-1 group-hover:text-accent"
+                    />
+                  </a>
+                ))}
               </div>
-           </div>
+            </motion.div>
 
-           <div className="lg:col-span-5 space-y-8">
-              <div className="p-10 rounded-[2.5rem] bg-zinc-900/30 border border-white/5">
-                 <h3 className="text-zinc-500 text-[10px] font-mono uppercase tracking-[0.3em] mb-8 border-b border-white/5 pb-4">Social Nodes</h3>
-                 <div className="space-y-6">
-                    <a href="#" className="flex items-center justify-between group">
-                       <div className="flex items-center gap-4">
-                          <div className="p-3 rounded-xl bg-zinc-900 group-hover:bg-blue-600 transition-colors">
-                             <Linkedin size={20} />
-                          </div>
-                          <span className="text-zinc-400 group-hover:text-white transition-colors">Professional Matrix</span>
-                       </div>
-                       <ArrowRight size={16} className="text-zinc-800 group-hover:text-white transition-all group-hover:translate-x-1" />
-                    </a>
-                    <a href="#" className="flex items-center justify-between group">
-                       <div className="flex items-center gap-4">
-                          <div className="p-3 rounded-xl bg-zinc-900 group-hover:bg-blue-600 transition-colors">
-                             <Github size={20} />
-                          </div>
-                          <span className="text-zinc-400 group-hover:text-white transition-colors">Source Control</span>
-                       </div>
-                       <ArrowRight size={16} className="text-zinc-800 group-hover:text-white transition-all group-hover:translate-x-1" />
-                    </a>
-                 </div>
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: EASE, delay: 0.3 }}
+              className="rounded-2xl border border-accent/20 bg-accent/[0.03] p-8"
+            >
+              <h3 className="mb-5 font-mono text-[10px] uppercase tracking-[0.3em] text-accent">
+                Status: Online
+              </h3>
+              <p className="mb-6 text-sm font-light leading-7 text-zinc-400">
+                Currently accepting{" "}
+                <span className="font-medium text-white">high-impact</span>{" "}
+                projects for Q3–Q4 2026. Specialized in SaaS platforms and
+                full-stack systems.
+              </p>
+              <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500">
+                <MapPin size={12} className="text-accent" /> Lebanon — GMT+2
               </div>
-
-              <div className="p-10 rounded-[2.5rem] bg-blue-600/5 border border-blue-500/10">
-                 <h3 className="text-blue-400 text-[10px] font-mono uppercase tracking-[0.3em] mb-6">Status: Online</h3>
-                 <p className="text-zinc-500 text-sm leading-relaxed mb-6">
-                    Currently accepting <span className="text-white">High-Impact</span> projects for Q3-Q4 2026. Specialized in SaaS migration and AI orchestration.
-                 </p>
-                 <div className="flex items-center gap-2 text-zinc-400 text-[10px] font-mono">
-                    <MapPin size={12} /> GLOBAL NODE 01 — GMT+2
-                 </div>
-              </div>
-           </div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </main>
-  )
-}
-
-function MapPin(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-      <circle cx="12" cy="10" r="3" />
-    </svg>
   )
 }

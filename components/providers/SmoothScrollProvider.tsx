@@ -1,6 +1,6 @@
 "use client"
 
-import { ReactNode, useEffect, useLayoutEffect, useRef } from "react"
+import { ReactNode, useEffect, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { usePathname } from "next/navigation"
 import Lenis from "lenis"

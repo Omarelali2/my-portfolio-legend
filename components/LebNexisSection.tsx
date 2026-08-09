@@ -2,235 +2,255 @@
 
 import React from "react"
 import { motion } from "framer-motion"
-import { fadeInUp, stagger } from "@/lib/motion"
 import {
   ArrowUpRight,
   CheckCircle2,
   Code2,
-  Layers3,
+  PlayCircle,
   Trophy,
   Users,
 } from "lucide-react"
-import Image from "next/image"
 import Link from "next/link"
+import { lebnexisProducts, lebnexisMetrics } from "@/lib/data"
+import { Reveal } from "@/components/ui/Reveal"
+import { EASE } from "@/lib/motion"
 
-const features = [
-  "Real-world frontend & full-stack challenges",
-  "Portfolio-ready projects for developers",
-  "Structured tracks with skill validation",
-  "Community-driven learning and growth",
+const challenges = [
+  { name: "E-Commerce API", status: "shipped", progress: 100, color: "bg-accent" },
+  { name: "Realtime Chat", status: "in review", progress: 82, color: "bg-accent" },
+  { name: "SaaS Landing", status: "building", progress: 46, color: "bg-zinc-600" },
 ]
 
-const stats = [
-  {
-    value: "50+",
-    label: "Challenges Planned",
-  },
-  {
-    value: "3",
-    label: "Core Tracks",
-  },
-  {
-    value: "2026",
-    label: "Platform Launch",
-  },
+const sidebarItems = [
+  { label: "Academy", active: false },
+  { label: "Arena", active: true },
+  { label: "Tracks", active: false },
+  { label: "Community", active: false },
 ]
+
+function DashboardMockup() {
+  return (
+    <div className="group/dash relative overflow-hidden rounded-2xl border border-white/[0.09] bg-raised shadow-[0_40px_100px_-50px_rgba(0,0,0,1)] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:[transform:perspective(1400px)_rotateX(2deg)_rotateY(-2deg)]">
+      {/* Window chrome */}
+      <div className="flex items-center gap-2 border-b border-white/[0.07] bg-surface/70 px-4 py-3">
+        <span className="h-2.5 w-2.5 rounded-full bg-[#3a3a40]" />
+        <span className="h-2.5 w-2.5 rounded-full bg-[#4a4a52]" />
+        <span className="h-2.5 w-2.5 rounded-full bg-[#5a5a64]" />
+        <span className="ml-3 font-mono text-[10px] tracking-[0.2em] text-zinc-500">
+          lebnexis.com — developer console
+        </span>
+      </div>
+
+      <div className="grid grid-cols-[56px_1fr] sm:grid-cols-[150px_1fr]">
+        {/* Sidebar */}
+        <div className="border-r border-white/[0.07] bg-black/30 p-3 sm:p-4">
+          <div className="mb-6 hidden items-center gap-2 sm:flex">
+            <span className="flex h-6 w-6 items-center justify-center rounded-md bg-accent font-mono text-[10px] font-black text-black">
+              LN
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white">
+              LebNexis
+            </span>
+          </div>
+
+          <div className="space-y-1 sm:space-y-2">
+            {sidebarItems.map((item) => (
+              <div
+                key={item.label}
+                className={`flex items-center gap-2 rounded-lg px-2 py-1.5 font-mono text-[10px] sm:text-[11px] ${
+                  item.active
+                    ? "bg-accent/10 text-accent"
+                    : "text-zinc-500"
+                }`}
+              >
+                <span className="h-1 w-1 rounded-full bg-current" />
+                <span className="hidden sm:inline">{item.label}</span>
+                <span className="sm:hidden">{item.label.charAt(0)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Main */}
+        <div className="p-4 sm:p-5">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-600">
+                Arena / Challenges
+              </p>
+              <h4 className="mt-1 text-sm font-bold tracking-tight text-white sm:text-base">
+                Real-world builds
+              </h4>
+            </div>
+            <span className="hidden items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-accent sm:flex">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse-dot" />
+              Live
+            </span>
+          </div>
+
+          <div className="space-y-2.5">
+            {challenges.map((c) => (
+              <div
+                key={c.name}
+                className="rounded-xl border border-white/[0.06] bg-black/30 p-3"
+              >
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="font-mono text-[11px] text-zinc-300">
+                    {c.name}
+                  </span>
+                  <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-zinc-500">
+                    {c.status}
+                  </span>
+                </div>
+                <div className="h-1 overflow-hidden rounded-full bg-white/[0.06]">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${c.progress}%` }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.2, ease: EASE, delay: 0.3 }}
+                    className={`h-full rounded-full ${c.color}`}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-3 grid grid-cols-3 gap-2.5">
+            {[
+              { icon: Code2, label: "Challenges", value: "50+" },
+              { icon: Trophy, label: "Ranks", value: "Solo" },
+              { icon: Users, label: "Members", value: "200+" },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="rounded-xl border border-white/[0.06] bg-black/30 p-2.5 text-center sm:p-3"
+              >
+                <stat.icon size={13} className="mx-auto mb-1.5 text-accent" />
+                <p className="font-mono text-sm font-bold text-white">{stat.value}</p>
+                <p className="hidden font-mono text-[8px] uppercase tracking-[0.16em] text-zinc-600 sm:block">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom bar */}
+      <div className="flex items-center justify-between border-t border-white/[0.07] bg-black/30 px-4 py-2.5 font-mono text-[9px] uppercase tracking-[0.2em] text-zinc-600">
+        <span className="flex items-center gap-1.5">
+          <CheckCircle2 size={10} className="text-accent" /> Skill validation on
+        </span>
+        <span>v0.2 — ALPHA</span>
+      </div>
+    </div>
+  )
+}
 
 export default function LebNexisSection() {
   return (
-    <section className="relative overflow-hidden bg-black py-32 text-white md:py-44">
-      {/* Background */}
+    <section
+      id="lebnexis"
+      className="relative overflow-hidden bg-base py-28 md:py-40"
+    >
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-0 top-20 h-[520px] w-[520px] rounded-full bg-blue-600/10 blur-[150px]" />
-        <div className="absolute bottom-0 right-0 h-[460px] w-[460px] rounded-full bg-purple-600/10 blur-[140px]" />
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-[0.07] [mask-image:radial-gradient(circle_at_center,white,transparent_72%)]" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 55% 45% at 12% 30%, rgba(183,255,60,0.05), transparent 70%)",
+          }}
+        />
       </div>
 
-      <div className="container relative z-10 mx-auto max-w-7xl px-6 md:px-8">
-        <motion.div
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={stagger(0.12) as any}
-          className="grid grid-cols-1 items-center gap-16 lg:grid-cols-12 lg:gap-20"
-        >
-          {/* Content */}
-          <div className="order-2 lg:order-1 lg:col-span-6">
-            <motion.div
-              variants={fadeInUp as any}
-              className="mb-7 inline-flex items-center gap-4 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2.5 backdrop-blur-md"
-            >
-              <div className="relative h-9 w-9 overflow-hidden rounded-xl border border-white/10 bg-zinc-950">
-                <Image
-                  src="/images/lebnexis-logo.png"
-                  alt="LebNexis Logo"
-                  fill
-                  className="object-contain p-1.5"
-                />
-              </div>
+      <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-8">
+        <Reveal y={16} className="mb-14">
+          <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.32em]">
+            <span className="text-accent">05</span>
+            <span className="text-zinc-600">Founder Project</span>
+            <span className="h-px w-14 bg-white/15" aria-hidden />
+          </div>
+        </Reveal>
 
-              <div>
-                <p className="text-[9px] font-semibold uppercase tracking-[0.28em] text-zinc-500">
-                  Founder Project
-                </p>
-                <p className="text-xs font-black uppercase tracking-[0.22em] text-white">
-                  LebNexis Tahaddiyat
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.h2
-              variants={fadeInUp as any}
-              className="mb-8 max-w-4xl text-5xl font-black uppercase leading-[0.9] tracking-[-0.06em] md:text-7xl lg:text-8xl"
-            >
-              Building the
+        <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-12 lg:gap-14">
+          {/* Copy */}
+          <div className="lg:col-span-6">
+            <h2 className="text-[clamp(3.2rem,7vw,6.5rem)] font-black uppercase leading-[0.85] tracking-[-0.05em] text-white">
+              LEB
               <br />
-              <span className="bg-gradient-to-r from-zinc-200 via-zinc-500 to-zinc-800 bg-clip-text italic text-transparent">
-                developer arena.
-              </span>
-            </motion.h2>
+              <span className="text-outline-accent">NEXIS</span>
+            </h2>
 
-            <motion.div
-              variants={fadeInUp as any}
-              className="mb-10 max-w-xl space-y-6 text-lg font-light leading-8 text-zinc-400"
-            >
-              <p>
-                <span className="font-medium text-white">
-                  LebNexis Tahaddiyat
-                </span>{" "}
-                is a developer challenge platform built to help students and
-                junior developers move from tutorials into real-world execution.
+            <Reveal delay={0.1} className="mt-8 max-w-lg">
+              <p className="text-lg font-light leading-8 text-zinc-400">
+                Building a technology ecosystem designed around{" "}
+                <span className="font-medium text-white">learning</span>,{" "}
+                <span className="font-medium text-white">challenges</span>, and{" "}
+                <span className="font-medium text-white">developer growth</span>.
               </p>
+            </Reveal>
 
-              <p>
-                The platform focuses on practical challenges, portfolio-ready
-                projects, structured learning tracks, and skill validation for
-                frontend and full-stack developers.
-              </p>
-            </motion.div>
-
-            <motion.div
-              variants={fadeInUp as any}
-              className="mb-10 grid gap-3 sm:grid-cols-2"
-            >
-              {features.map((feature) => (
-                <div
-                  key={feature}
-                  className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm font-medium text-zinc-300"
-                >
-                  <CheckCircle2 size={16} className="shrink-0 text-blue-400" />
-                  {feature}
-                </div>
+            <div className="mt-10 space-y-1">
+              {lebnexisProducts.map((product, i) => (
+                <Reveal key={product.name} delay={0.15 + i * 0.06}>
+                  <div className="group flex items-center justify-between border-b border-white/[0.07] py-3.5">
+                    <div className="flex items-center gap-5">
+                      <span className="font-mono text-[10px] text-zinc-700 transition-colors group-hover:text-accent">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="font-mono text-sm text-zinc-200 transition-colors group-hover:text-white">
+                        {product.name}
+                      </span>
+                    </div>
+                    <span className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-600 sm:block">
+                      {product.desc}
+                    </span>
+                  </div>
+                </Reveal>
               ))}
-            </motion.div>
+            </div>
 
-            <motion.div
-              variants={fadeInUp as any}
-              className="mb-10 grid max-w-xl grid-cols-3 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-md"
-            >
-              {stats.map((item, index) => (
-                <div
-                  key={item.label}
-                  className={`p-5 text-center ${
-                    index !== stats.length - 1 ? "border-r border-white/10" : ""
-                  }`}
-                >
-                  <p className="font-mono text-xl font-black text-white">
-                    {item.value}
-                  </p>
-                  <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.18em] text-zinc-500">
-                    {item.label}
-                  </p>
-                </div>
-              ))}
-            </motion.div>
-
-            <motion.div variants={fadeInUp as any}>
+            <Reveal delay={0.3} className="mt-10">
               <Link
                 href="https://lebnexis.com/tahaddiyat"
                 target="_blank"
-                className="group inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 text-sm font-black uppercase tracking-[-0.03em] text-black transition-all hover:scale-[1.03] hover:shadow-[0_0_35px_rgba(255,255,255,0.22)]"
+                className="group inline-flex items-center gap-3 rounded-full bg-accent px-7 py-3.5 text-xs font-bold uppercase tracking-[0.18em] text-black transition-colors hover:bg-accent-deep"
               >
                 Explore The Platform
                 <ArrowUpRight
-                  size={18}
-                  className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  size={15}
+                  className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                 />
               </Link>
-            </motion.div>
+            </Reveal>
           </div>
 
-          {/* Preview */}
-          <motion.div
-            variants={fadeInUp as any}
-            className="order-1 lg:order-2 lg:col-span-6 md:block hidden"
-          >
-            <div className="group relative">
-              <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-zinc-950 shadow-2xl">
-                <div className="relative aspect-[4/5] md:aspect-square lg:aspect-[4/5]">
-                  <Image
-                    src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop"
-                    alt="LebNexis Tahaddiyat platform preview"
-                    fill
-                    className="object-cover opacity-45 saturate-0 transition-all duration-1000 group-hover:scale-105 group-hover:opacity-75 group-hover:saturate-100"
-                  />
+          {/* Dashboard mockup */}
+          <Reveal delay={0.15} className="lg:col-span-6">
+            <DashboardMockup />
+          </Reveal>
+        </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-transparent" />
-
-                  {/* Top badge */}
-                  <div className="absolute left-6 top-6 rounded-full border border-white/10 bg-black/55 px-4 py-2 backdrop-blur-xl">
-                    <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white">
-                      Developer Challenge Platform
-                    </p>
-                  </div>
-
-                  {/* Main floating card */}
-                  <div className="absolute bottom-6 left-6 right-6 rounded-[2rem] border border-white/10 bg-black/55 p-6 backdrop-blur-2xl">
-                    <div className="mb-6 flex items-center justify-between gap-4">
-                      <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-blue-400">
-                          Live Ecosystem
-                        </p>
-                        <h3 className="mt-2 text-2xl font-black uppercase tracking-[-0.04em] text-white">
-                          Build. Submit. Level Up.
-                        </h3>
-                      </div>
-
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black">
-                        <Trophy size={20} />
-                      </div>
-                    </div>
-
-                    <div className="grid gap-3 sm:grid-cols-3">
-                      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-                        <Code2 size={18} className="mb-3 text-white" />
-                        <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-zinc-500">
-                          Challenges
-                        </p>
-                      </div>
-
-                      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-                        <Layers3 size={18} className="mb-3 text-white" />
-                        <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-zinc-500">
-                          Tracks
-                        </p>
-                      </div>
-
-                      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-                        <Users size={18} className="mb-3 text-white" />
-                        <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-zinc-500">
-                          Community
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+        {/* Metrics */}
+        <div className="mt-24 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.07] md:grid-cols-4">
+          {lebnexisMetrics.map((metric, i) => (
+            <Reveal key={metric.label} delay={i * 0.06} className="h-full">
+              <div className="flex h-full flex-col justify-between gap-8 bg-raised p-7">
+                <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-zinc-600">
+                  {metric.label}
+                </span>
+                <span className="text-4xl font-black tracking-[-0.03em] text-white">
+                  {metric.value}
+                </span>
               </div>
+            </Reveal>
+          ))}
+        </div>
 
-              <div className="absolute -inset-8 -z-10 rounded-[3rem] bg-blue-600/10 blur-[90px] opacity-70 transition-opacity duration-700 group-hover:opacity-100" />
-            </div>
-          </motion.div>
-        </motion.div>
+        <Reveal delay={0.2} className="mt-6 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-600">
+          <PlayCircle size={12} className="text-accent" />
+          Founder project — in active development
+        </Reveal>
       </div>
     </section>
   )

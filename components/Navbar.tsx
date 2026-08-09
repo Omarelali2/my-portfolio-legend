@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
+import { usePathname } from "next/navigation"
 import {
   motion,
   AnimatePresence,
@@ -13,170 +13,200 @@ import { ArrowUpRight, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navLinks = [
-  { name: "About", href: "/#about" },
-  { name: "Top Projects", href: "/#projects" },
-  { name: "LebNexis", href: "/#lebnexis" },
-  { name: "Skills", href: "/#skills" },
+  { id: "about", name: "About", href: "/#about" },
+  { id: "work", name: "Work", href: "/#work" },
+  { id: "skills", name: "Skills", href: "/#skills" },
+  { id: "experience", name: "Experience", href: "/#experience" },
+  { id: "contact", name: "Contact", href: "/#contact" },
 ]
 
 export default function Navbar() {
+  const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [hidden, setHidden] = useState(false)
+  const [active, setActive] = useState<string | null>(null)
 
   const { scrollY } = useScroll()
 
-  useMotionValueEvent(scrollY, "change", latest => {
+  useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0
-
-    setHidden(latest > previous && latest > 180)
+    setHidden(latest > previous && latest > 240)
     setScrolled(latest > 24)
   })
+
+  // Scroll-spy for section indicators on the home page
+  useEffect(() => {
+    if (pathname !== "/") {
+      setActive(null)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id)
+        })
+      },
+      { rootMargin: "-40% 0px -52% 0px" },
+    )
+
+    navLinks.forEach((link) => {
+      const el = document.getElementById(link.id)
+      if (el) observer.observe(el)
+    })
+
+    return () => observer.disconnect()
+  }, [pathname])
 
   const closeMenu = () => setMobileMenuOpen(false)
 
   return (
     <>
-      <motion.nav
-        variants={{
-          visible: { y: 0 },
-          hidden: { y: "-120%" },
-        }}
+      <motion.header
+        variants={{ visible: { y: 0 }, hidden: { y: "-130%" } }}
         animate={hidden && !mobileMenuOpen ? "hidden" : "visible"}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className={cn(
           "fixed left-0 right-0 top-0 z-50 transition-all duration-500",
-          scrolled ? "py-4" : "py-6",
+          scrolled ? "py-3" : "py-5",
         )}
       >
-        <div className='container mx-auto max-w-7xl px-6 md:px-8'>
+        <div className="mx-auto max-w-7xl px-4 md:px-8">
           <div
             className={cn(
-              "flex items-center justify-between rounded-full border transition-all duration-500",
+              "flex items-center justify-between rounded-full border border-white/[0.08] transition-all duration-500",
               scrolled
-                ? "border-white/10 bg-black/65 px-4 py-3 shadow-2xl backdrop-blur-xl"
-                : "border-transparent bg-transparent px-0 py-0",
+                ? "bg-[#0b0b0c]/85 px-3 py-2 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.9)] backdrop-blur-xl"
+                : "bg-[#0b0b0c]/40 px-3 py-2.5 backdrop-blur-md",
             )}
           >
+            {/* Logo */}
             <Link
-              href='/'
+              href="/"
               onClick={closeMenu}
-              className='group flex items-center gap-3'
+              className="group flex items-center gap-3"
             >
-              <div className='relative h-10 w-10 border-2 px-6 py-6 md:px-5 md:py-5 border-white/10 rounded-full flex items-center justify-center bg-zinc-900 group-hover:bg-white/10 transition-colors'>
-                <h1 className='absolute inset-0 flex items-center justify-center text-2xl md:text-xl font-black text-white'>
+              <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/[0.03]">
+                <span className="text-sm font-black tracking-tight text-white">
                   O
-                  <span className='text-blue-500'>
-                    E
-                  </span>
-                </h1>
+                  <span className="text-accent">E</span>
+                </span>
               </div>
-
-              <div className='hidden leading-none sm:block'>
-                <p className='text-sm font-black uppercase tracking-[-0.03em] text-white'>
+              <div className="hidden leading-none lg:block">
+                <p className="text-xs font-bold tracking-[-0.02em] text-white">
                   Omar El-Ali
                 </p>
-                <p className='mt-1 text-[9px] font-bold uppercase tracking-[0.24em] text-zinc-500'>
-                  Full-Stack Engineer
+                <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.22em] text-zinc-500">
+                  Software Engineer
                 </p>
               </div>
             </Link>
 
-            <div className='hidden items-center gap-8 md:flex'>
-              {navLinks.map(link => (
+            {/* Desktop links */}
+            <nav className="hidden items-center gap-1 md:flex">
+              {navLinks.map((link) => (
                 <Link
-                  key={link.name}
+                  key={link.id}
                   href={link.href}
-                  className='text-[10px] font-black uppercase tracking-[0.22em] text-zinc-500 transition-colors hover:text-white'
+                  className={cn(
+                    "relative rounded-full px-4 py-2 font-mono text-[10px] uppercase tracking-[0.22em] transition-colors duration-300",
+                    active === link.id
+                      ? "text-white"
+                      : "text-zinc-500 hover:text-white",
+                  )}
                 >
-                  {link.name}
+                  {active === link.id && (
+                    <motion.span
+                      layoutId="nav-active"
+                      className="absolute inset-0 rounded-full bg-white/[0.06] ring-1 ring-white/10"
+                      transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                    />
+                  )}
+                  <span className="relative z-10">
+                    {active === link.id && (
+                      <span className="mr-1.5 text-accent">•</span>
+                    )}
+                    {link.name}
+                  </span>
                 </Link>
               ))}
-            </div>
+            </nav>
 
-            <div className='hidden items-center gap-3 md:flex'>
+            {/* CTA */}
+            <div className="flex items-center gap-2">
               <Link
-                href='/resume'
-                className='rounded-full border border-white/10 bg-white/[0.03] px-5 py-3 text-[10px] font-black uppercase tracking-[0.18em] text-white transition-all hover:border-white/25 hover:bg-white/[0.08]'
+                href="/contact"
+                className="group hidden items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-black transition-all duration-300 hover:bg-accent-deep md:inline-flex"
               >
-                Resume
-              </Link>
-
-              <Link
-                href='/projects'
-                className='group flex items-center gap-2 rounded-full bg-white px-5 py-3 text-[10px] font-black uppercase tracking-[0.18em] text-black transition-all hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(255,255,255,0.18)]'
-              >
-                All Projects
+                Let&apos;s Talk
                 <ArrowUpRight
-                  size={14}
-                  className='transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5'
+                  size={13}
+                  className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                 />
               </Link>
-            </div>
 
-            <button
-              type='button'
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-              onClick={() => setMobileMenuOpen(prev => !prev)}
-              className='flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white transition-all hover:bg-white/[0.08] md:hidden'
-            >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
+              <button
+                type="button"
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                onClick={() => setMobileMenuOpen((prev) => !prev)}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white transition-colors hover:bg-white/[0.08] md:hidden"
+              >
+                {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+              </button>
+            </div>
           </div>
         </div>
-      </motion.nav>
+      </motion.header>
 
+      {/* Mobile menu */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className='fixed inset-0 z-40 bg-black/95 px-6 pt-28 text-white backdrop-blur-xl md:hidden'
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-40 flex flex-col justify-between bg-base px-6 pb-8 pt-28 md:hidden"
           >
-            <div className='pointer-events-none absolute inset-0'>
-              <div className='absolute left-1/2 top-20 h-[360px] w-[360px] -translate-x-1/2 rounded-full bg-blue-600/10 blur-[120px]' />
-            </div>
-
-            <div className='relative z-10 flex h-full flex-col justify-between pb-10'>
-              <div className='space-y-4'>
-                {navLinks.map((link, index) => (
-                  <motion.div
-                    key={link.name}
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.06 }}
+            <nav className="flex flex-col gap-2">
+              {navLinks.map((link, index) => (
+                <motion.div
+                  key={link.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <Link
+                    href={link.href}
+                    onClick={closeMenu}
+                    className="flex items-center justify-between border-b border-white/[0.07] py-5"
                   >
-                    <Link
-                      href={link.href}
-                      onClick={closeMenu}
-                      className='flex items-center justify-between rounded-3xl border border-white/10 bg-white/[0.03] px-6 py-5 text-3xl font-black uppercase tracking-[-0.05em] text-white'
-                    >
+                    <span className="text-3xl font-bold uppercase tracking-[-0.03em] text-white">
                       {link.name}
-                      <ArrowUpRight size={20} className='text-zinc-500' />
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
+                    </span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-zinc-600">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </Link>
+                </motion.div>
+              ))}
+            </nav>
 
-              <div className='grid gap-3'>
-                <Link
-                  href='/resume'
-                  onClick={closeMenu}
-                  className='rounded-full border border-white/10 bg-white/[0.03] px-7 py-5 text-center text-xs font-black uppercase tracking-[0.2em] text-white'
-                >
-                  Resume
-                </Link>
-
-                <Link
-                  href='/projects'
-                  onClick={closeMenu}
-                  className='rounded-full bg-white px-7 py-5 text-center text-xs font-black uppercase tracking-[0.2em] text-black'
-                >
-                  All Projects
-                </Link>
-              </div>
-            </div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.25 }}
+            >
+              <Link
+                href="/contact"
+                onClick={closeMenu}
+                className="flex items-center justify-center gap-2 rounded-full bg-accent px-7 py-4 text-xs font-bold uppercase tracking-[0.2em] text-black"
+              >
+                Let&apos;s Talk
+                <ArrowUpRight size={15} />
+              </Link>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -1,12 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
-import {
-  Download,
-  Calendar,
-  MapPin,
-} from "lucide-react"
+import { Download, Calendar, MapPin } from "lucide-react"
 import Link from "next/link"
+import { Reveal } from "@/components/ui/Reveal"
+import { EASE } from "@/lib/motion"
 
 const experience = [
   {
@@ -19,6 +17,15 @@ const experience = [
     skills: ["Next.js", "TypeScript", "PostgreSQL", "Prisma"],
   },
   {
+    company: "Techtalk",
+    role: "Full-Stack Development Intern",
+    period: "2025",
+    location: "Beirut, Lebanon (Remote)",
+    description:
+      "Contributing to full-stack projects, gaining hands-on experience in modern web architecture, and collaborating with a specialized team.",
+    skills: ["Next.js", "MERN", "REST APIs"],
+  },
+  {
     company: "Personal & Open Source",
     role: "Product Developer",
     period: "2022 — Present",
@@ -29,126 +36,140 @@ const experience = [
   },
 ]
 
+const stacks = [
+  { title: "Frontend", value: "Next.js, React, TypeScript, Tailwind CSS" },
+  { title: "Backend", value: "Node.js, API Design, Authentication" },
+  { title: "Database", value: "PostgreSQL, MongoDB, Prisma ORM" },
+  { title: "Tools", value: "GitHub, Vercel, Docker, CI/CD" },
+]
+
 export default function ResumePage() {
   return (
-    <main className="min-h-screen bg-black text-white pt-32 pb-24">
-      <div className="container mx-auto max-w-8xl px-6 md:px-8">
-        
-        {/* HEADER */}
-        <div className="mb-20 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+    <main className="relative overflow-hidden bg-base pb-28 pt-32 md:pt-40">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="bg-grid-sm mask-radial-center absolute inset-0 opacity-30" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-8">
+        {/* Header */}
+        <div className="mb-20 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="mb-4 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">
-              Resume
-            </p>
+            <Reveal y={16}>
+              <div className="mb-6 flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.32em]">
+                <span className="text-accent">—</span>
+                <span className="text-zinc-600">Resume</span>
+                <span className="h-px w-14 bg-white/15" aria-hidden />
+              </div>
+            </Reveal>
 
-            <h1 className="text-5xl font-black uppercase tracking-[-0.04em] md:text-7xl">
-              Omar El-Ali
-            </h1>
+            <Reveal delay={0.05}>
+              <h1 className="text-[clamp(2.8rem,6vw,5.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-white">
+                Omar El-Ali
+              </h1>
+            </Reveal>
 
-            <p className="mt-4 text-zinc-400 text-base md:text-lg">
-              Full-Stack Engineer — Next.js, TypeScript, PostgreSQL
-            </p>
+            <Reveal delay={0.12}>
+              <p className="mt-5 font-mono text-sm text-zinc-400">
+                Full-Stack Engineer —{" "}
+                <span className="text-accent">Next.js / TypeScript / PostgreSQL</span>
+              </p>
+            </Reveal>
           </div>
 
-          <Link
-            href="/resume.pdf"
-            className="inline-flex items-center gap-3 rounded-full bg-white px-6 py-4 text-xs font-black uppercase tracking-[0.2em] text-black hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all"
-          >
-            <Download size={16} />
-            Download CV
-          </Link>
+          <Reveal delay={0.15}>
+            <Link
+              href="/resume.pdf"
+              className="group inline-flex items-center gap-3 rounded-full bg-accent px-7 py-4 text-xs font-bold uppercase tracking-[0.18em] text-black transition-colors hover:bg-accent-deep"
+            >
+              <Download size={15} className="transition-transform duration-300 group-hover:translate-y-0.5" />
+              Download CV
+            </Link>
+          </Reveal>
         </div>
 
         <div className="grid gap-16 md:grid-cols-12">
-          
-          {/* EXPERIENCE */}
-          <div className="md:col-span-8 space-y-16">
-            <div>
-              <h2 className="mb-10 border-b border-white/10 pb-4 text-xs font-black uppercase tracking-[0.25em] text-zinc-500">
+          {/* Experience */}
+          <div className="md:col-span-8">
+            <Reveal>
+              <h2 className="mb-10 border-b border-white/[0.08] pb-4 font-mono text-xs font-bold uppercase tracking-[0.25em] text-zinc-500">
                 Experience
               </h2>
+            </Reveal>
 
-              <div className="space-y-12">
-                {experience.map((exp, idx) => (
-                  <motion.div
-                    key={exp.company}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.1 }}
-                    viewport={{ once: true }}
-                  >
-                    <div className="mb-4 flex flex-wrap justify-between gap-4">
-                      <div>
-                        <h3 className="text-xl font-bold">{exp.role}</h3>
-                        <p className="text-blue-400">{exp.company}</p>
-                      </div>
-
-                      <div className="text-right text-xs text-zinc-500 font-mono">
-                        <div className="flex items-center gap-2 justify-end">
-                          <Calendar size={14} /> {exp.period}
-                        </div>
-                        <div className="flex items-center gap-2 justify-end mt-1">
-                          <MapPin size={14} /> {exp.location}
-                        </div>
-                      </div>
+            <div className="space-y-12">
+              {experience.map((exp, idx) => (
+                <motion.div
+                  key={exp.company + exp.role}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.08, duration: 0.7, ease: EASE }}
+                >
+                  <div className="mb-4 flex flex-wrap justify-between gap-4">
+                    <div>
+                      <h3 className="text-xl font-bold tracking-[-0.02em] text-white">
+                        {exp.role}
+                      </h3>
+                      <p className="mt-1 font-mono text-xs uppercase tracking-[0.18em] text-accent">
+                        {exp.company}
+                      </p>
                     </div>
 
-                    <p className="mb-4 max-w-xl text-sm text-zinc-400 leading-relaxed">
-                      {exp.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-2">
-                      {exp.skills.map((s) => (
-                        <span
-                          key={s}
-                          className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[10px] uppercase tracking-[0.15em] text-zinc-400"
-                        >
-                          {s}
-                        </span>
-                      ))}
+                    <div className="text-right font-mono text-xs text-zinc-500">
+                      <div className="flex items-center gap-2">
+                        <Calendar size={13} className="text-zinc-600" /> {exp.period}
+                      </div>
+                      <div className="mt-1 flex items-center gap-2">
+                        <MapPin size={13} className="text-zinc-600" /> {exp.location}
+                      </div>
                     </div>
-                  </motion.div>
-                ))}
-              </div>
+                  </div>
+
+                  <p className="mb-4 max-w-xl text-sm font-light leading-7 text-zinc-400">
+                    {exp.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2">
+                    {exp.skills.map((s) => (
+                      <span
+                        key={s}
+                        className="border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-500"
+                      >
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
 
-          {/* SKILLS */}
-          <div className="md:col-span-4 space-y-10">
-            <div>
-              <h2 className="mb-6 border-b border-white/10 pb-4 text-xs font-black uppercase tracking-[0.25em] text-zinc-500">
+          {/* Stack */}
+          <div className="md:col-span-4">
+            <Reveal>
+              <h2 className="mb-10 border-b border-white/[0.08] pb-4 font-mono text-xs font-bold uppercase tracking-[0.25em] text-zinc-500">
                 Tech Stack
               </h2>
+            </Reveal>
 
-              <div className="space-y-6 text-sm text-zinc-400">
-                <div>
-                  <h4 className="mb-2 text-white font-bold uppercase text-xs">
-                    Frontend
-                  </h4>
-                  <p>Next.js, React, TypeScript, Tailwind CSS</p>
-                </div>
-
-                <div>
-                  <h4 className="mb-2 text-white font-bold uppercase text-xs">
-                    Backend
-                  </h4>
-                  <p>Node.js, API Design, Authentication</p>
-                </div>
-
-                <div>
-                  <h4 className="mb-2 text-white font-bold uppercase text-xs">
-                    Database
-                  </h4>
-                  <p>PostgreSQL, Prisma ORM</p>
-                </div>
-
-                <div>
-                  <h4 className="mb-2 text-white font-bold uppercase text-xs">
-                    Tools
-                  </h4>
-                  <p>GitHub, Vercel, CI/CD</p>
-                </div>
-              </div>
+            <div className="space-y-8">
+              {stacks.map((stack, i) => (
+                <Reveal key={stack.title} delay={i * 0.06}>
+                  <div className="flex items-baseline gap-4 border-l-2 border-white/[0.08] pl-5 transition-colors duration-300 hover:border-accent">
+                    <span className="font-mono text-[10px] text-zinc-600">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div>
+                      <h4 className="mb-1.5 font-mono text-xs font-bold uppercase tracking-[0.18em] text-white">
+                        {stack.title}
+                      </h4>
+                      <p className="text-sm font-light leading-6 text-zinc-500">
+                        {stack.value}
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
             </div>
           </div>
         </div>

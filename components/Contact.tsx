@@ -1,133 +1,119 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { ArrowRight, Github, Linkedin, Mail, MapPin } from "lucide-react"
+import React from "react"
+import { ArrowRight, Github, Linkedin, Mail } from "lucide-react"
 import Link from "next/link"
+import { WordReveal } from "@/components/ui/WordReveal"
+import { MagneticButton } from "@/components/ui/MagneticButton"
+import { Reveal } from "@/components/ui/Reveal"
+
+const links = [
+  {
+    label: "Email",
+    value: "elaliomar30@gmail.com",
+    href: "mailto:elaliomar30@gmail.com",
+  },
+  {
+    label: "LinkedIn",
+    value: "linkedin.com/in/omar-elali",
+    href: "https://www.linkedin.com/in/omar-elali-28aaa1312/",
+  },
+  {
+    label: "GitHub",
+    value: "github.com/omarelali",
+    href: "https://github.com/omarelali2",
+  },
+]
 
 export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden bg-black py-32 text-white md:py-44"
+      className="relative overflow-hidden bg-base py-32 md:py-44"
     >
+      {/* Stronger accent moment */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-0 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-blue-600/10 blur-[150px]" />
-        <div className="absolute bottom-0 right-0 h-[440px] w-[440px] rounded-full bg-purple-600/10 blur-[140px]" />
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-[0.06] [mask-image:radial-gradient(circle_at_center,white,transparent_75%)]" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 55% at 50% 100%, rgba(183,255,60,0.09), transparent 70%)",
+          }}
+        />
+        <div className="bg-grid mask-radial-center absolute inset-0 opacity-40" />
       </div>
 
-      <div className="container relative z-10 mx-auto w-full md:px-6 ">
-        <div className="group relative">
-          <div className="absolute -inset-px bg-gradient-to-r from-blue-600/30 via-white/10 to-purple-600/30 opacity-40 blur-xl transition-opacity duration-700 group-hover:opacity-70" />
-
-          <div className="relative overflow-hidden md:rounded-2xl border border-white/10 bg-zinc-950/90 px-6 py-16 text-center backdrop-blur-xl md:px-16 md:py-24">
-            <div className="absolute right-0 top-0 h-80 w-80 translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-[100px]" />
-            <div className="absolute bottom-0 left-0 h-80 w-80 -translate-x-1/2 translate-y-1/2 rounded-full bg-purple-500/10 blur-[100px]" />
-
-            <motion.div
-              initial={{ opacity: 0, y: 26 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-              viewport={{ once: true }}
-              className="relative z-10 mx-auto max-w-4xl"
-            >
-              <div className="mb-7 inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-5 py-2.5 backdrop-blur-md">
-                <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-zinc-400">
-                  Open to Gulf opportunities
-                </span>
-              </div>
-
-              <h2 className="mx-auto mb-8 max-w-4xl text-5xl font-black uppercase leading-[0.9] tracking-[-0.06em] text-white md:text-7xl lg:text-8xl">
-                Let&apos;s build
-                <br />
-                <span className="bg-gradient-to-r from-zinc-200 via-zinc-500 to-zinc-800 bg-clip-text italic text-transparent">
-                  something real.
-                </span>
-              </h2>
-
-              <p className="mx-auto mb-12 max-w-2xl text-base leading-7 text-zinc-400 md:text-xl md:leading-8">
-                Looking for full-stack, Next.js, or SaaS opportunities where I
-                can build reliable products, clean systems, and business-focused
-                user experiences.
-              </p>
-
-              <div className="mb-14 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <motion.a
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.97 }}
-                  href="mailto:elaliomar30@gmail.com"
-                  className="group/link inline-flex w-full items-center justify-center gap-3 rounded-full bg-white px-9 py-5 text-sm font-black uppercase tracking-[-0.03em] text-black transition-all hover:shadow-[0_0_40px_rgba(255,255,255,0.22)] sm:w-auto"
-                >
-                  Contact Me
-                  <ArrowRight
-                    size={18}
-                    className="transition-transform group-hover/link:translate-x-1"
-                  />
-                </motion.a>
-
-                <Link
-                  href="/projects"
-                  className="inline-flex w-full items-center justify-center rounded-full border border-white/10 bg-white/[0.03] px-9 py-5 text-sm font-black uppercase tracking-[-0.03em] text-white backdrop-blur-md transition-all hover:border-white/25 hover:bg-white/[0.08] sm:w-auto"
-                >
-                  View Projects
-                </Link>
-              </div>
-
-              <div className="mx-auto mb-12 flex max-w-2xl flex-wrap items-center justify-center gap-4 text-xs uppercase tracking-[0.22em] text-zinc-600">
-                <div className="flex items-center gap-2">
-                  <MapPin size={14} />
-                  Lebanon based
-                </div>
-                <span className="hidden h-1 w-1 rounded-full bg-zinc-700 sm:block" />
-                <span>Remote / Relocation ready</span>
-              </div>
-
-              <div className="grid gap-3 border-t border-white/10 pt-10 sm:grid-cols-3">
-                <Link
-                  href="https://github.com/omarelali"
-                  target="_blank"
-                  className="group/social flex items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-zinc-500 transition-all hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
-                >
-                  <Github
-                    size={19}
-                    className="opacity-60 transition-opacity group-hover/social:opacity-100"
-                  />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em]">
-                    GitHub
-                  </span>
-                </Link>
-
-                <Link
-                  href="https://www.linkedin.com/in/omar-elali-28aaa1312/"
-                  target="_blank"
-                  className="group/social flex items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-zinc-500 transition-all hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
-                >
-                  <Linkedin
-                    size={19}
-                    className="opacity-60 transition-opacity group-hover/social:opacity-100"
-                  />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em]">
-                    LinkedIn
-                  </span>
-                </Link>
-
-                <Link
-                  href="mailto:elaliomar30@gmail.com"
-                  className="group/social flex items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-zinc-500 transition-all hover:border-white/20 hover:bg-white/[0.06] hover:text-white"
-                >
-                  <Mail
-                    size={19}
-                    className="opacity-60 transition-opacity group-hover/social:opacity-100"
-                  />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em]">
-                    Email
-                  </span>
-                </Link>
-              </div>
-            </motion.div>
+      <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center px-6 text-center md:px-8">
+        <Reveal y={16} className="mb-12">
+          <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.32em]">
+            <span className="h-px w-10 bg-white/15" aria-hidden />
+            <span className="text-accent">06</span>
+            <span className="text-zinc-600">Contact</span>
+            <span className="h-px w-10 bg-white/15" aria-hidden />
           </div>
-        </div>
+        </Reveal>
+
+        <h2 className="text-[clamp(3.2rem,9vw,8.5rem)] font-bold uppercase leading-[0.85] tracking-[-0.05em] text-white">
+          <WordReveal text="Let's" />
+          <br />
+          <WordReveal text="build" delay={0.25} />
+          <br />
+          <WordReveal text="something." delay={0.5} className="text-accent" />
+        </h2>
+
+        <Reveal delay={0.5} className="mt-10 max-w-xl">
+          <p className="text-base font-light leading-8 text-zinc-400 md:text-lg">
+            Have a product, startup, or engineering challenge? Let&apos;s talk.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.6} className="mt-12">
+          <MagneticButton
+            href="mailto:elaliomar30@gmail.com"
+            className="group bg-accent px-10 py-5 text-sm font-bold uppercase tracking-[0.16em] text-black transition-colors hover:bg-accent-deep"
+            strength={0.35}
+          >
+            <span className="flex items-center gap-3">
+              Start A Conversation
+              <ArrowRight
+                size={16}
+                className="transition-transform duration-300 group-hover:translate-x-1.5"
+              />
+            </span>
+          </MagneticButton>
+        </Reveal>
+
+        <Reveal delay={0.7} className="mt-20 w-full max-w-4xl">
+          <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.07] sm:grid-cols-3">
+            {links.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                target={link.href.startsWith("http") ? "_blank" : undefined}
+                rel="noreferrer"
+                className="group flex items-center justify-between gap-4 bg-raised p-5 transition-colors duration-300 hover:bg-elevated sm:flex-col sm:items-start sm:gap-6"
+              >
+                <span className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.28em] text-zinc-600">
+                  {link.label === "Email" ? (
+                    <Mail size={13} className="text-accent" />
+                  ) : link.label === "LinkedIn" ? (
+                    <Linkedin size={13} className="text-accent" />
+                  ) : (
+                    <Github size={13} className="text-accent" />
+                  )}
+                  {link.label}
+                </span>
+                <span className="flex items-center gap-2 font-mono text-xs text-zinc-300 transition-colors group-hover:text-white">
+                  {link.value}
+                  <ArrowRight
+                    size={12}
+                    className="text-zinc-600 opacity-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:text-accent group-hover:opacity-100"
+                  />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </Reveal>
       </div>
     </section>
   )
