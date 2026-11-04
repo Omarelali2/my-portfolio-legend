@@ -113,32 +113,53 @@ function createTechTexture(
   ctx.lineWidth = 2
   ctx.stroke()
 
-  // Real logo from Simple Icons CDN
+  // Real logo from Simple Icons CDN (with graceful fallback)
   if (simpleIcon) {
     const img = new Image()
     img.crossOrigin = "anonymous"
     img.src = `https://cdn.simpleicons.org/${simpleIcon}${
       color ? "/" + color : ""
     }`
-    img.decode().then(() => {
-      ctx.drawImage(img, 64 - r * 0.75, 64 - r * 0.75, r * 1.5, r * 1.5)
-      ;(texture as any).needsUpdate = true
-    })
-  } else {
-    const fb = LUCIDE_FALLBACKS[name]
-    if (fb) {
-      ctx.fillStyle = fb.color
-      ctx.font = "bold 26px 'Segoe UI', system-ui, sans-serif"
-      ctx.textAlign = "center"
-      ctx.textBaseline = "middle"
-      ctx.fillText(fb.letter, 64, 67)
+    img.onload = () => {
+      try {
+        ctx.drawImage(img, 64 - r * 0.75, 64 - r * 0.75, r * 1.5, r * 1.5)
+        ;(texture as any).needsUpdate = true
+      } catch {
+        // Canvas tainted or decode failed — fall back to letter
+        drawFallbackLetter(ctx, name, r)
+        ;(texture as any).needsUpdate = true
+      }
     }
+    img.onerror = () => {
+      drawFallbackLetter(ctx, name, r)
+      ;(texture as any).needsUpdate = true
+    }
+  } else {
+    drawFallbackLetter(ctx, name, r)
   }
 
   const texture = new THREE.CanvasTexture(canvas)
   texture.needsUpdate = true
   textureCache.set(cacheKey, texture)
   return texture
+}
+
+/**
+ * Fallback: draw the lucide letter when the Simple Icons image fails to load.
+ */
+function drawFallbackLetter(
+  ctx: CanvasRenderingContext2D,
+  name: string,
+  r: number,
+) {
+  const fb = LUCIDE_FALLBACKS[name]
+  if (fb) {
+    ctx.fillStyle = fb.color
+    ctx.font = "bold 26px 'Segoe UI', system-ui, sans-serif"
+    ctx.textAlign = "center"
+    ctx.textBaseline = "middle"
+    ctx.fillText(fb.letter, 64, 67)
+  }
 }
 
 /* ------------------------------------------------------------------ */
