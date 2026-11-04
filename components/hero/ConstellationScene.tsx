@@ -56,7 +56,7 @@ function TechIcon({
   const url = item.icon
     ? `https://cdn.simpleicons.org/${item.icon}${item.iconColor ? "/" + item.iconColor : ""}`
     : undefined
-  const Icon = item.lucide ? LUCIDE[item.lucide] : Code2
+  const Icon = item.lucide ? (LUCIDE[item.lucide] ?? Code2) : Code2
   const [imgFailed, setImgFailed] = useState(false)
 
   return (
