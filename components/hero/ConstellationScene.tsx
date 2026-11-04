@@ -137,9 +137,9 @@ export function ConstellationScene({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.4, ease: EASE }}
-            className="relative z-10 mx-auto max-w-2xl mt-10 md:mt-12"
+            className="relative z-10 mx-auto w-[90%] max-w-none mt-10 md:mt-12"
           >
-            <div className="rounded-2xl border border-accent/20 bg-accent/[0.05] p-8 md:p-10 shadow-[0_0_50px_rgba(37,99,235,0.15)]">
+            <div className="rounded-2xl border border-accent/20 bg-accent/[0.05] p-6 md:p-8 shadow-[0_0_50px_rgba(37,99,235,0.15)]">
               <div className="flex items-center gap-3 mb-6 font-mono text-[10px] uppercase tracking-[0.3em] text-accent">
                 <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
                 {activeCategory} — Technology Systems
