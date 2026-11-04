@@ -161,16 +161,10 @@ function Orbit({
 }
 
 /* ------------------------------------------------------------------ */
-/* 3D constellation scene                                             */
+/* Camera controls — must live inside Canvas so useThree() is valid   */
 /* ------------------------------------------------------------------ */
 
-export function ConstellationScene({
-  activeCategory,
-  setActiveCategory,
-}: {
-  activeCategory: string | null
-  setActiveCategory: (id: string | null) => void
-}) {
+function ConstellationCameraControls() {
   const { camera } = useThree()
   const reduced =
     typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -188,7 +182,6 @@ export function ConstellationScene({
     return () => window.removeEventListener("mousemove", onMove)
   }, [reduced, camera])
 
-  // Slow auto orbit
   useFrame((state) => {
     if (reduced) return
     const t = state.clock.elapsedTime
@@ -196,6 +189,20 @@ export function ConstellationScene({
     camera.lookAt(0, 0, 0)
   })
 
+  return null
+}
+
+/* ------------------------------------------------------------------ */
+/* 3D constellation scene                                             */
+/* ------------------------------------------------------------------ */
+
+export function ConstellationScene({
+  activeCategory,
+  setActiveCategory,
+}: {
+  activeCategory: string | null
+  setActiveCategory: (id: string | null) => void
+}) {
   return (
     <Canvas
       camera={{ position: [0, 0, 9], fov: 45 }}
@@ -203,6 +210,7 @@ export function ConstellationScene({
       dpr={[1, 1.5]}
       shadows
     >
+      <ConstellationCameraControls />
       <ambientLight intensity={0.6} color={0xffffff} />
       <pointLight position={[6, 6, 6]} intensity={0.8} color={0xffffff} />
       <pointLight

@@ -8,16 +8,14 @@ import { Spacecraft } from "./Spacecraft"
 import { Starfield, EnergyParticles } from "./Starfield"
 
 /**
- * Client-only 3D space scene. Rendered via next/dynamic (ssr: false)
- * to avoid Next.js App Router hydration mismatches with WebGL canvas.
+ * Camera controls — must live inside Canvas so useThree() is valid.
  */
-export function SpaceScene() {
+function CameraControls() {
   const { camera } = useThree()
   const mouseRef = useRef({ x: 0, y: 0 })
   const reduced =
     typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
-  // Mouse drift (only when not reduced motion)
   useEffect(() => {
     if (reduced) return
     const onMove = (e: MouseEvent) => {
@@ -28,7 +26,6 @@ export function SpaceScene() {
     return () => window.removeEventListener("mousemove", onMove)
   }, [reduced])
 
-  // Camera entrance
   useEffect(() => {
     camera.position.set(0, 1, 9)
     gsap.to(camera.position, {
@@ -40,7 +37,6 @@ export function SpaceScene() {
     })
   }, [])
 
-  // Idle orbit + pointer drift
   useFrame((state) => {
     if (reduced) return
     const t = state.clock.elapsedTime
@@ -52,6 +48,14 @@ export function SpaceScene() {
     camera.lookAt(0, 0, 0)
   })
 
+  return null
+}
+
+/**
+ * Client-only 3D space scene. Rendered via next/dynamic (ssr: false)
+ * to avoid Next.js App Router hydration mismatches with WebGL canvas.
+ */
+export function SpaceScene() {
   return (
     <Canvas
       camera={{ position: [0, 0.2, 5.5], fov: 45 }}
@@ -59,6 +63,7 @@ export function SpaceScene() {
       dpr={[1, 1.5]}
       shadows
     >
+      <CameraControls />
       <ambientLight intensity={0.35} color={0xffffff} />
       <directionalLight
         position={[8, 6, 10]}
@@ -70,9 +75,9 @@ export function SpaceScene() {
       />
       <hemisphereLight position={[0, 1, 0]} intensity={0.25} />
 
-      <Spacecraft hoverIntensity={reduced ? 0 : 1} />
-      <Starfield count={reduced ? 1200 : 2400} />
-      <EnergyParticles count={reduced ? 24 : 44} />
+      <Spacecraft hoverIntensity={1} />
+      <Starfield count={2400} />
+      <EnergyParticles count={44} />
     </Canvas>
   )
 }
