@@ -161,10 +161,22 @@ function ProjectCard({
 
   const accent =
     project.slug === "tahaddiyat"
-      ? "bg-gradient-to-br from-accent to-cyan-400 text-black"
+      ? {
+          color: "#2563EB",
+          glow: "rgba(37,99,235,0.45)",
+          text: "text-accent",
+        }
       : project.slug === "arena"
-        ? "bg-gradient-to-br from-cyan-400 to-violet-500 text-black"
-        : "bg-gradient-to-br from-violet-500 to-accent text-white"
+        ? {
+            color: "#22D3EE",
+            glow: "rgba(34,211,238,0.45)",
+            text: "text-cyan-400",
+          }
+        : {
+            color: "#8B5CF6",
+            glow: "rgba(139,92,246,0.45)",
+            text: "text-violet-400",
+          }
 
   const num = String(index + 1).padStart(2, "0")
 
@@ -192,11 +204,14 @@ function ProjectCard({
       transition={{ duration: 0.85, ease: EASE, delay: index * 0.1 }}
       className="group relative flex flex-col overflow-hidden rounded-xl border border-white/[0.07] bg-elevated shadow-[0_30px_80px_-40px_rgba(0,0,0,0.9)] transition-transform duration-700 hover:[transform:translateY(-4px)]"
     >
-      <div className="relative">
+      <div className="relative overflow-hidden">
+        <div className="absolute -top-1 left-0 right-0 h-1" style={{
+          background: "linear-gradient(to right, transparent, " + accent.color + ", transparent)",
+        }} />
         <SystemPreview variant={project.slug} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
         <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full" />
+          <span className="h-2 w-2 rounded-full bg-white/[0.3]" />
           <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-400">
             {project.year}
           </span>
@@ -207,7 +222,7 @@ function ProjectCard({
         <div className="mb-3 flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.28em]">
-              <span className={cn(accent.includes("text-black") ? "text-black" : "text-cyan-400")}>
+              <span className={cn(accent.text, "shadow-[0_0_16px_" + accent.glow + "]")}>
                 {num}
               </span>
               <span className="hidden md:inline text-zinc-600">{project.type}</span>
@@ -250,7 +265,7 @@ function ProjectCard({
               Live Demo
             </Link>
           ) : (
-            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-600">
+            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500 opacity-70">
               Platform in development
             </span>
           )}

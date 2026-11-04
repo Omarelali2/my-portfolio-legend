@@ -5,27 +5,57 @@ import * as THREE from "three"
 import { useEffect, useRef, useState } from "react"
 import { skillCategories } from "@/lib/data"
 
-const LUCIDE_COLORS: Record<string, string> = {
-  Code2: "#61dafb",
-  Server: "#f59e0b",
-  Database: "#3b82f6",
-  ShieldCheck: "#22d3ee",
-  Zap: "#fbbf24",
-  Wifi: "#8b5cf6",
-  Layout: "#a855f7",
-  Code: "#61dafb",
-  Github: "#f05032",
-  Cloud: "#3b82f6",
-  Edit3: "#10b981",
-  Sliders: "#8b5cf6",
+/* ------------------------------------------------------------------ */
+/* Simple Icons map (official slugs)                                   */
+/* ------------------------------------------------------------------ */
+
+const SIMPLE_ICONS: Record<string, string> = {
+  typescript: "typescript",
+  javascript: "javascript",
+  java: "java",
+  csharp: "csharp",
+  php: "php",
+  react: "react",
+  nextdotjs: "nextdotjs",
+  tailwindcss: "tailwindcss",
+  nodejs: "nodejs",
+  express: "express",
+  nestjs: "nestjs",
+  postgresql: "postgresql",
+  mongodb: "mongodb",
+  oracle: "oracle",
+  amazonwebservices: "amazonwebservices",
+  docker: "docker",
+  git: "git",
+  postman: "postman",
+  reactnative: "reactnative",
+  expo: "expo",
 }
 
-type IconInfo = {
-  letter: string
-  color: string
+const SIMPLE_ICON_COLORS: Record<string, string> = {
+  typescript: "3178c6",
+  javascript: "f7df1e",
+  java: "007396",
+  csharp: "68217a",
+  php: "777bb4",
+  react: "61dafb",
+  nextdotjs: "000000",
+  tailwindcss: "06b6d4",
+  nodejs: "339933",
+  express: "000000",
+  nestjs: "ea2845",
+  postgresql: "4169e1",
+  mongodb: "47a248",
+  oracle: "f80000",
+  amazonwebservices: "ff9900",
+  docker: "2496ed",
+  git: "f05032",
+  postman: "ff6c37",
+  reactnative: "61dafb",
+  expo: "000020",
 }
 
-const ICON_INFO: Record<string, IconInfo> = {
+const LUCIDE_FALLBACKS: Record<string, { letter: string; color: string }> = {
   Code2: { letter: "</>", color: "#61dafb" },
   Server: { letter: "SV", color: "#f59e0b" },
   Database: { letter: "DB", color: "#3b82f6" },
@@ -34,20 +64,26 @@ const ICON_INFO: Record<string, IconInfo> = {
   Wifi: { letter: "📶", color: "#8b5cf6" },
   Layout: { letter: "📐", color: "#a855f7" },
   Code: { letter: "{}", color: "#61dafb" },
-  Github: { letter: "octocat", color: "#f05032" },
+  Github: { letter: "🐙", color: "#f05032" },
   Cloud: { letter: "☁", color: "#3b82f6" },
   Edit3: { letter: "✎", color: "#10b981" },
   Sliders: { letter: "≡", color: "#8b5cf6" },
+  Router: { letter: "🔀", color: "#61dafb" },
+  Share2: { letter: "🔗", color: "#22d3ee" },
 }
 
 /* ------------------------------------------------------------------ */
-/* Canvas texture factory for icon sprites                             */
+/* Texture cache (Simple Icons CDN via canvas)                        */
 /* ------------------------------------------------------------------ */
 
 const textureCache = new Map<string, THREE.Texture>()
 
-function createIconTexture(letter: string, color: string): THREE.Texture {
-  const cacheKey = `${letter}:${color}`
+function createTechTexture(
+  name: string,
+  simpleIcon?: string,
+  color?: string,
+): THREE.Texture {
+  const cacheKey = `${name}:${simpleIcon ?? ""}`
   if (textureCache.has(cacheKey)) {
     return textureCache.get(cacheKey)!
   }
@@ -56,36 +92,47 @@ function createIconTexture(letter: string, color: string): THREE.Texture {
   canvas.width = 128
   canvas.height = 128
   const ctx = canvas.getContext("2d")!
-  const r = 44
+  const r = 42
 
   // Outer glow
   const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64)
-  grad.addColorStop(0, color + "80")
+  grad.addColorStop(0, (color ?? "#ffffff") + "60")
   grad.addColorStop(1, "transparent")
   ctx.fillStyle = grad
   ctx.beginPath()
-  ctx.arc(64, 64, r * 1.8, 0, Math.PI * 2)
+  ctx.arc(64, 64, r * 1.9, 0, Math.PI * 2)
   ctx.fill()
 
   // Icon circle
-  ctx.fillStyle = color
+  ctx.fillStyle = "#0b1228"
   ctx.beginPath()
   ctx.arc(64, 64, r, 0, Math.PI * 2)
   ctx.fill()
-
-  // Ring
-  ctx.strokeStyle = "rgba(255,255,255,0.4)"
-  ctx.lineWidth = 3
-  ctx.beginPath()
-  ctx.arc(64, 64, r + 3, 0, Math.PI * 2)
+  ctx.strokeStyle = "rgba(255,255,255,0.15)"
+  ctx.lineWidth = 2
   ctx.stroke()
 
-  // Letter
-  ctx.fillStyle = "#050816"
-  ctx.font = "bold 28px 'Segoe UI', system-ui, sans-serif"
-  ctx.textAlign = "center"
-  ctx.textBaseline = "middle"
-  ctx.fillText(letter, 64, 66)
+  // Real logo from Simple Icons CDN
+  if (simpleIcon) {
+    const img = new Image()
+    img.crossOrigin = "anonymous"
+    img.src = `https://cdn.simpleicons.org/${simpleIcon}${
+      color ? "/" + color : ""
+    }`
+    img.decode().then(() => {
+      ctx.drawImage(img, 64 - r * 0.75, 64 - r * 0.75, r * 1.5, r * 1.5)
+      ;(texture as any).needsUpdate = true
+    })
+  } else {
+    const fb = LUCIDE_FALLBACKS[name]
+    if (fb) {
+      ctx.fillStyle = fb.color
+      ctx.font = "bold 26px 'Segoe UI', system-ui, sans-serif"
+      ctx.textAlign = "center"
+      ctx.textBaseline = "middle"
+      ctx.fillText(fb.letter, 64, 67)
+    }
+  }
 
   const texture = new THREE.CanvasTexture(canvas)
   texture.needsUpdate = true
@@ -113,14 +160,14 @@ function TechIcon({
   const spriteRef = useRef<THREE.Sprite>(null)
   const [isHovered, setIsHovered] = useState(false)
 
-  const info = ICON_INFO[item.lucide ?? "Code2"] ?? ICON_INFO["Code2"]
-  const texture = createIconTexture(info.letter, info.color)
+  const simpleIcon = item.icon ?? undefined
+  const color = item.iconColor ?? undefined
+  const texture = createTechTexture(item.name, simpleIcon, color)
 
-  // Hover scale animation
   useFrame(() => {
     const sprite = spriteRef.current
     if (!sprite) return
-    const targetScale = (active || isHovered) ? 1.4 : 1.0
+    const targetScale = (active || isHovered) ? 1.35 : 1.0
     sprite.scale.lerp(new THREE.Vector3(targetScale, targetScale, 1), 0.15)
   })
 

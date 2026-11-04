@@ -78,14 +78,17 @@ function TimelineCard({
             {company}
           </p>
         </div>
-        <p className="mb-4 max-w-xl text-sm font-light leading-7 text-zinc-400 md:text-base">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500 mb-3">
+          {location}
+        </p>
+        <p className="mb-5 max-w-xl text-sm font-light leading-7 text-zinc-400 md:text-base">
           {description}
         </p>
         <div className="flex flex-wrap gap-2">
           {stack.map((tech) => (
             <span
               key={tech}
-              className="border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-500"
+              className="border border-white/[0.08] bg-white/[0.02] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-500"
             >
               {tech}
             </span>
@@ -210,8 +213,8 @@ export default function About() {
         </div>
 
         {/* Timeline */}
-        <div className="mt-24 border-t border-white/[0.08] pt-16">
-          <Reveal y={16} className="mb-14">
+        <div className="mt-28 border-t border-white/[0.08] pt-20 md:mt-36">
+          <Reveal y={16} className="mb-16">
             <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.32em]">
               <span className="text-accent">02</span>
               <span className="text-zinc-600">Timeline</span>
@@ -219,11 +222,11 @@ export default function About() {
             </div>
           </Reveal>
 
-          <h2 className="mb-16 text-[clamp(2.2rem,4.5vw,3rem)] font-bold uppercase leading-[1.05] tracking-[-0.03em] text-white">
+          <h2 className="mb-20 text-[clamp(2rem,4vw,2.75rem)] font-bold uppercase leading-[1.05] tracking-[-0.03em] text-white text-center md:text-left">
             From the classroom to production systems
           </h2>
 
-          <div className="relative mx-auto max-w-3xl">
+          <div className="relative mx-auto max-w-4xl">
             <div className="absolute left-2 top-0 bottom-0 w-px bg-gradient-to-b from-white/[0.06] via-white/[0.02] to-transparent" />
 
             {[
@@ -247,7 +250,7 @@ export default function About() {
             ))}
           </div>
 
-          <div className="mt-16 grid grid-cols-2 gap-4 overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02]">
+          <div className="mt-24 grid grid-cols-1 sm:grid-cols-2 gap-4 overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02]">
             {certifications.map((cert, i) => (
               <Reveal key={cert.name} delay={i * 0.06} className="h-full">
                 <div className="flex h-full items-center justify-between bg-raised p-6 transition-colors hover:bg-elevated">
