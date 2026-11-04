@@ -1,18 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  /* Surfaces */
-  --color-base: #070707;
-  --color-raised: #0b0b0c;
-  --color-elevated: #111113;
-  --color-surface: #151517;
+  /* Surfaces — deep space */
+  --color-base: #050816;
+  --color-raised: #0B1228;
+  --color-elevated: #101933;
+  --color-surface: #17234A;
 
-  /* Brand accent — electric lime / signal green */
-  --color-accent: #b7ff3c;
-  --color-accent-deep: #8edb20;
+  /* Brand — cinematic engineering palette */
+  --color-accent: #2563EB;      /* Electric Blue */
+  --color-accent-deep: #1D4ED8;
+  --color-cyan: #22D3EE;        /* Neon Cyan */
+  --color-violet: #8B5CF6;      /* Soft Violet */
+  --color-white: #F8FAFC;
+  --color-muted: #94A3B8;
 
   /* Hairline borders */
-  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line: rgba(255, 255, 255, 0.06);
 
   /* Typography */
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -22,6 +26,7 @@
   --animate-marquee: marquee 38s linear infinite;
   --animate-dash-flow: dash-flow 1.4s linear infinite;
   --animate-pulse-dot: pulse-dot 2.2s ease-in-out infinite;
+  --animate-orbit: orbit 20s linear infinite;
 
   @keyframes marquee {
     to {
@@ -44,6 +49,12 @@
       opacity: 1;
     }
   }
+
+  @keyframes orbit {
+    to {
+      transform: rotate(360deg);
+    }
+  }
 }
 
 @layer base {
@@ -54,12 +65,12 @@
   html {
     scroll-behavior: smooth;
     scrollbar-width: thin;
-    scrollbar-color: #2a2a2e #070707;
+    scrollbar-color: #1e2a47 #050816;
   }
 
   body {
     background: var(--color-base);
-    color: #fafafa;
+    color: #f8fafc;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -68,7 +79,7 @@
 
   ::selection {
     background: var(--color-accent);
-    color: #070707;
+    color: #050816;
   }
 
   ::-webkit-scrollbar {
@@ -77,17 +88,17 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #070707;
+    background: #050816;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #26262b;
+    background: #111827;
     border-radius: 8px;
-    border: 2px solid #070707;
+    border: 2px solid #050816;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #38383f;
+    background: #1e2a47;
   }
 
   :focus-visible {
@@ -97,43 +108,43 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Utilities                                                           */
+/* Utilities                                                          */
 /* ------------------------------------------------------------------ */
 
-/* Fine engineering grid — replaces heavy glow orbs everywhere */
+/* Fine engineering grid — subtle depth layer */
 .bg-grid {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    linear-gradient(to right, rgba(37, 99, 235, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
   background-size: 56px 56px;
 }
 
 .bg-grid-sm {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
 /* Subtle film-grain overlay (inline SVG, no external request) */
 .bg-noise {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.6'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
 }
 
 /* Outlined display text for big section numbers */
 .text-outline {
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.14);
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.12);
   color: transparent;
 }
 
 .text-outline-accent {
-  -webkit-text-stroke: 1px rgba(183, 255, 60, 0.5);
+  -webkit-text-stroke: 1px rgba(34, 211, 238, 0.45);
   color: transparent;
 }
 
 /* Soft neumorphic control surface (subtle, for tiny controls only) */
 .control-neu {
-  background: #0f0f11;
+  background: #0b1228;
   box-shadow:
     inset 1px 1px 0 rgba(255, 255, 255, 0.05),
     inset -1px -1px 0 rgba(0, 0, 0, 0.6),
@@ -156,8 +167,30 @@
   mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
 }
 
+/* Orbital ring helper (pure CSS, no layout shift) */
+.orbit-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Glow utility */
+.glow-accent {
+  box-shadow: 0 0 32px rgba(37, 99, 235, 0.35);
+}
+.glow-cyan {
+  box-shadow: 0 0 32px rgba(34, 211, 238, 0.35);
+}
+.glow-violet {
+  box-shadow: 0 0 32px rgba(139, 92, 246, 0.35);
+}
+
 /* ------------------------------------------------------------------ */
-/* Reduced motion                                                      */
+/* Reduced motion                                                     */
 /* ------------------------------------------------------------------ */
 
 @media (prefers-reduced-motion: reduce) {

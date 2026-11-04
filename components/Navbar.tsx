@@ -17,6 +17,7 @@ const navLinks = [
   { id: "work", name: "Work", href: "/#work" },
   { id: "skills", name: "Skills", href: "/#skills" },
   { id: "experience", name: "Experience", href: "/#experience" },
+  { id: "education", name: "Education", href: "/#education" },
   { id: "contact", name: "Contact", href: "/#contact" },
 ]
 
@@ -35,7 +36,6 @@ export default function Navbar() {
     setScrolled(latest > 24)
   })
 
-  // Scroll-spy for section indicators on the home page
   useEffect(() => {
     if (pathname !== "/") {
       setActive(null)
@@ -77,8 +77,8 @@ export default function Navbar() {
             className={cn(
               "flex items-center justify-between rounded-full border border-white/[0.08] transition-all duration-500",
               scrolled
-                ? "bg-[#0b0b0c]/85 px-3 py-2 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.9)] backdrop-blur-xl"
-                : "bg-[#0b0b0c]/40 px-3 py-2.5 backdrop-blur-md",
+                ? "bg-[#0b1228]/85 px-3 py-2 shadow-[0_12px_40px_-16px_rgba(0,0,0,0.9)] backdrop-blur-xl"
+                : "bg-[#0b1228]/40 px-3 py-2.5 backdrop-blur-md",
             )}
           >
             {/* Logo */}
@@ -136,7 +136,7 @@ export default function Navbar() {
             {/* CTA */}
             <div className="flex items-center gap-2">
               <Link
-                href="/contact"
+                href="#contact"
                 className="group hidden items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-black transition-all duration-300 hover:bg-accent-deep md:inline-flex"
               >
                 Let&apos;s Talk
@@ -199,7 +199,7 @@ export default function Navbar() {
               transition={{ delay: 0.25 }}
             >
               <Link
-                href="/contact"
+                href="#contact"
                 onClick={closeMenu}
                 className="flex items-center justify-center gap-2 rounded-full bg-accent px-7 py-4 text-xs font-bold uppercase tracking-[0.2em] text-black"
               >

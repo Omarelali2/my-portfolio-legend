@@ -1,22 +1,24 @@
 import Hero from "@/components/Hero"
 import About from "@/components/About"
-import Projects from "@/components/Projects"
 import Skills from "@/components/Skills"
+import Projects from "@/components/Projects"
 import Experience from "@/components/Experience"
+import EducationNetworking from "@/components/EducationNetworking"
 import LebNexisSection from "@/components/LebNexisSection"
-import Contact from "@/components/Contact"
 import { Marquee } from "@/components/ui/Marquee"
+import Contact from "@/components/Contact"
 
 export default function Home() {
   return (
     <main className="relative overflow-hidden bg-base text-white">
       <Hero />
       <About />
-      <Projects />
-      <Marquee items={["Build", "Ship", "Scale", "Repeat"]} />
       <Skills />
+      <Projects />
       <Experience />
+      <EducationNetworking />
       <LebNexisSection />
+      <Marquee items={["Engineer", "Deploy", "Scale", "Iterate"]} />
       <Contact />
     </main>
   )
