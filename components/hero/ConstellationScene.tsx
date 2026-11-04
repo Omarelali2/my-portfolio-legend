@@ -94,9 +94,10 @@ function createTechTexture(
   const ctx = canvas.getContext("2d")!
   const r = 42
 
+  const hex = color ? "#" + color : "#ffffff"
   // Outer glow
   const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64)
-  grad.addColorStop(0, (color ?? "#ffffff") + "60")
+  grad.addColorStop(0, hex + "60")
   grad.addColorStop(1, "transparent")
   ctx.fillStyle = grad
   ctx.beginPath()
