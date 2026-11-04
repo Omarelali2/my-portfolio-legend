@@ -113,7 +113,7 @@ function TechIcon({
   const spriteRef = useRef<THREE.Sprite>(null)
   const [isHovered, setIsHovered] = useState(false)
 
-  const info = ICON_INFO[item.lucide ?? "Code2"]
+  const info = ICON_INFO[item.lucide ?? "Code2"] ?? ICON_INFO["Code2"]
   const texture = createIconTexture(info.letter, info.color)
 
   // Hover scale animation
