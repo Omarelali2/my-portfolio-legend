@@ -1,7 +1,6 @@
 "use client"
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import * as THREE from "three"
 import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { Spacecraft } from "./Spacecraft"
@@ -70,11 +69,7 @@ export function SpaceScene() {
         intensity={1.1}
         color={0xffffff}
         castShadow
-        shadow-map-size-width={1024}
-        shadow-map-size-height={1024}
       />
-      <hemisphereLight position={[0, 1, 0]} intensity={0.25} />
-
       <Spacecraft hoverIntensity={1} />
       <Starfield count={2400} />
       <EnergyParticles count={44} />
