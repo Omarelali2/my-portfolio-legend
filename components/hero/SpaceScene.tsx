@@ -4,7 +4,8 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 import { Spacecraft } from "./Spacecraft"
-import { Starfield, EnergyParticles } from "./Starfield"
+import { Starfield } from "./Starfield"
+import { EnergyParticles } from "./Starfield"
 
 /**
  * Camera controls — must live inside Canvas so useThree() is valid.
@@ -26,12 +27,12 @@ function CameraControls() {
   }, [reduced])
 
   useEffect(() => {
-    camera.position.set(0, 1, 9)
+    camera.position.set(0, 0, 7)
     gsap.to(camera.position, {
-      z: 4.6,
-      y: 0.15,
+      z: 5.5,
+      y: 0,
       x: 0,
-      duration: 2.6,
+      duration: 2.4,
       ease: "power3.out",
     })
   }, [])
@@ -39,9 +40,9 @@ function CameraControls() {
   useFrame((state) => {
     if (reduced) return
     const t = state.clock.elapsedTime
-    const targetX = mouseRef.current.x * 1.6
-    const targetY = -mouseRef.current.y * 1.1
-    const autoX = Math.sin(t * 0.12) * 1.2
+    const targetX = mouseRef.current.x * 1.2
+    const targetY = -mouseRef.current.y * 0.8
+    const autoX = Math.sin(t * 0.1) * 1.0
     camera.position.x += (targetX + autoX - camera.position.x) * 0.04
     camera.position.y += (targetY - camera.position.y) * 0.04
     camera.lookAt(0, 0, 0)
@@ -51,28 +52,29 @@ function CameraControls() {
 }
 
 /**
- * Client-only 3D space scene. Rendered via next/dynamic (ssr: false)
- * to avoid Next.js App Router hydration mismatches with WebGL canvas.
+ * Client-only 3D space scene.
  */
 export function SpaceScene() {
   return (
     <Canvas
-      camera={{ position: [0, 0.2, 5.5], fov: 45 }}
+      camera={{ position: [0, 0, 6], fov: 45 }}
       frameloop="always"
       dpr={[1, 1.5]}
       shadows
     >
       <CameraControls />
-      <ambientLight intensity={0.35} color={0xffffff} />
+      <ambientLight intensity={0.4} color={0xffffff} />
       <directionalLight
-        position={[8, 6, 10]}
-        intensity={1.1}
+        position={[10, 6, 10]}
+        intensity={1.2}
         color={0xffffff}
         castShadow
       />
+      <hemisphereLight intensity={0.25} />
+
       <Spacecraft hoverIntensity={1} />
-      <Starfield count={2400} />
-      <EnergyParticles count={44} />
+      <Starfield count={1800} />
+      <EnergyParticles count={36} />
     </Canvas>
   )
 }

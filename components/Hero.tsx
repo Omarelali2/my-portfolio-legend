@@ -11,7 +11,7 @@ import { EASE } from "@/lib/motion"
 const SpaceScene = dynamic(() => import("./hero/SpaceScene").then((mod) => mod.SpaceScene), {
   ssr: false,
   loading: () => (
-    <div className="h-[600px] w-full flex items-center justify-center">
+    <div className="h-[500px] w-full flex items-center justify-center">
       <span className="font-mono text-[11px] text-zinc-400">Initializing engine…</span>
     </div>
   ),
@@ -30,7 +30,7 @@ function supportsWebGL(): boolean {
 }
 
 /* ------------------------------------------------------------------ */
-/* Hero section                                                       */
+/* Hero section — cinematic opening sequence                          */
 /* ------------------------------------------------------------------ */
 
 export default function Hero() {
@@ -60,21 +60,29 @@ export default function Hero() {
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-base"
     >
-      <SpaceScene />
+      {/* 3D scene background */}
+      <div className="absolute inset-0 z-0">
+        <SpaceScene />
+      </div>
+
+      {/* Subtle ambient glow behind content */}
+      <div className="absolute inset-0 z-10 pointer-events-none" style={{
+        background: "radial-gradient(600px circle at 20% 20%, rgba(37,99,235,0.08), transparent 40%), radial-gradient(500px circle at 80% 80%, rgba(34,211,238,0.06), transparent 40%)",
+      }} />
 
       {/* Overlay content */}
-      <div className="relative z-20 mx-auto w-full px-6 md:px-8 pt-20">
+      <div className="relative z-20 mx-auto w-full px-6 md:px-8 pt-24 pb-32">
         <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-12 gap-12 md:gap-16 items-center">
-            {/* Copy */}
-            <div className="md:col-span-7">
+          <div className="grid md:grid-cols-12 gap-8 md:gap-16 items-start">
+            {/* Left: Copy (md:col-span-6) */}
+            <div className="md:col-span-7 lg:col-span-6">
               <motion.div
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, ease: EASE, delay: 0.2 }}
-                className="inline-flex items-center gap-2.5 mb-6 border border-white/10 bg-white/[0.02] px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.35em] text-cyan-400"
+                transition={{ duration: 0.8, ease: EASE, delay: 0.2 }}
+                className="inline-flex items-center gap-2.5 mb-8 border border-white/10 bg-white/[0.02] px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.4em] text-cyan-400"
               >
-                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
+                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
                 Engineering the Digital Universe
               </motion.div>
 
@@ -82,14 +90,14 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, ease: EASE, delay: 0.4 }}
-                className="mb-2 block text-[clamp(3.5rem,10vw,8rem)] font-black uppercase leading-[0.9] tracking-[-0.05em] text-white md:text-[clamp(4rem,11vw,9rem)]"
+                className="mb-6 block text-[clamp(3rem,8vw,5.5rem)] font-black uppercase leading-[1.05] tracking-[-0.06em] text-white md:text-[clamp(4rem,10vw,7rem)]"
               >
                 {TITLE_LINES.map((line, i) => (
                   <motion.span
                     key={line}
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.9, ease: EASE, delay: 0.5 + i * 0.14 }}
+                    transition={{ duration: 0.9, ease: EASE, delay: 0.5 + i * 0.15 }}
                     className="block"
                   >
                     {line}
@@ -101,19 +109,18 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: EASE, delay: 0.85 }}
-                className="hero-role mb-8 flex flex-col gap-1.5 text-[clamp(1.1rem,2vw,1.35rem)] font-medium text-white md:gap-2"
+                className="mb-6 flex flex-col gap-1.5 text-[clamp(1rem,2vw,1.2rem)] font-medium text-white md:gap-2"
               >
-                <span>Software Engineer</span>
-                <span className="text-cyan-300">
-                  Full-Stack Developer &nbsp;|&nbsp; Backend Engineer
-                </span>
+                <span className="text-zinc-400">Software Engineer</span>
+                <span className="text-cyan-300">Full-Stack Developer</span>
+                <span className="text-zinc-400">| Backend Engineer</span>
               </motion.div>
 
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: EASE, delay: 1.05 }}
-                className="mb-10 max-w-xl text-base font-light leading-8 text-zinc-300 italic md:text-lg"
+                className="mb-10 max-w-lg text-base font-light leading-8 text-zinc-300 italic md:text-lg"
               >
                 "Building intelligent systems, scalable applications, and meaningful digital experiences."
               </motion.p>
@@ -122,7 +129,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 22 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: EASE, delay: 1.25 }}
-                className="hero-cta flex flex-col sm:flex-row gap-4"
+                className="flex flex-col sm:flex-row gap-4"
               >
                 <MagneticButton
                   as="a"
@@ -151,37 +158,38 @@ export default function Hero() {
               </motion.div>
             </div>
 
-            {/* Holographic id card */}
-            <div className="md:col-span-5 hidden md:block">
-              <div className="relative h-[440px] w-full flex items-end justify-center">
-                <div className="relative z-10 w-full max-w-sm rounded-xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-md shadow-2xl">
-                  <div className="mb-4 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.3em] text-cyan-400">
+            {/* Right: Holographic ID card (md:col-span-6) */}
+            <div className="md:col-span-5 hidden md:block flex justify-center">
+              <div className="relative w-full max-w-sm">
+                <div className="relative z-10 rounded-xl border border-white/10 bg-white/[0.02] p-7 backdrop-blur-md shadow-2xl">
+                  <div className="mb-5 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.35em] text-cyan-400">
                     <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                     Agent Profile
                   </div>
-                  <div className="font-mono text-xs text-zinc-400 space-y-2">
-                    <div className="flex justify-between">
-                      <span>Designation</span>
+                  <div className="font-mono text-xs text-zinc-400 space-y-3">
+                    <div className="flex justify-between items-start">
+                      <span className="text-zinc-500">Designation</span>
                       <span className="text-white">Full-Stack Engineer</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Location</span>
+                    <div className="flex justify-between items-start">
+                      <span className="text-zinc-500">Location</span>
                       <span className="text-white">Akkar, Lebanon</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Alma Mater</span>
+                    <div className="flex justify-between items-start">
+                      <span className="text-zinc-500">Alma Mater</span>
                       <span className="text-white">Lebanese University</span>
                     </div>
-                    <div className="pt-2 border-t border-white/10 flex justify-between">
-                      <span>Status</span>
-                      <span className="flex items-center gap-1 text-cyan-400">
+                    <div className="pt-3 border-t border-white/10 flex justify-between items-start">
+                      <span className="text-zinc-500">Status</span>
+                      <span className="flex items-center gap-1.5 text-cyan-400">
                         <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
                         Online
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="absolute inset-0 rounded-xl border border-white/5 bg-gradient-to-t from-white/[0.03] to-transparent pointer-events-none" />
+                {/* Bottom glow gradient */}
+                <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
               </div>
             </div>
           </div>
@@ -206,20 +214,21 @@ function HeroFallback() {
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-base">
       <div className="absolute inset-0 opacity-[0.35]" style={{ background: "radial-gradient(circle at 50% 0%, rgba(37,99,235,0.12), transparent 60%)" }} />
-      <div className="relative z-10 mx-auto w-full px-6 md:px-8 pt-20 text-center">
-        <div className="inline-flex items-center gap-2.5 mb-6 border border-white/10 bg-white/[0.02] px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.35em] text-cyan-400">
+      <div className="relative z-10 mx-auto w-full px-6 md:px-8 pt-24 text-center">
+        <div className="inline-flex items-center gap-2.5 mb-8 border border-white/10 bg-white/[0.02] px-4 py-1.5 font-mono text-[10px] uppercase tracking-[0.4em] text-cyan-400">
           <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
           Engineering the Digital Universe
         </div>
-        <h1 className="mb-6 text-[clamp(3.5rem,10vw,7rem)] font-black uppercase leading-[0.9] tracking-[-0.05em] text-white">
+        <h1 className="mb-6 block text-[clamp(3rem,8vw,5rem)] font-black uppercase leading-[1.05] tracking-[-0.06em] text-white md:text-[clamp(4rem,10vw,6.5rem)]">
           OMAR<br />
           EL-ALI
         </h1>
-        <div className="mb-10 flex flex-col gap-1.5 justify-center text-[clamp(1.1rem,2vw,1.35rem)] font-medium text-white">
-          <span>Software Engineer</span>
-          <span className="text-cyan-300">Full-Stack Developer &nbsp;|&nbsp; Backend Engineer</span>
+        <div className="mb-6 flex flex-col gap-1.5 justify-center text-[clamp(1rem,2vw,1.2rem)] font-medium text-white">
+          <span className="text-zinc-400">Software Engineer</span>
+          <span className="text-cyan-300">Full-Stack Developer</span>
+          <span className="text-zinc-400">| Backend Engineer</span>
         </div>
-        <p className="mb-10 max-w-xl mx-auto text-base font-light leading-8 text-zinc-300 italic md:text-lg">
+        <p className="mb-10 max-w-lg mx-auto text-base font-light leading-8 text-zinc-300 italic md:text-lg">
           "Building intelligent systems, scalable applications, and meaningful digital experiences."
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

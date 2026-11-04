@@ -3,20 +3,6 @@
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import {
-  Code2,
-  Server,
-  Database,
-  ShieldCheck,
-  Zap,
-  Wifi,
-  Layout,
-  Code,
-  Github,
-  Cloud,
-  Edit3,
-  Sliders,
-} from "lucide-react"
 import { cn } from "@/lib/utils"
 import { skillCategories } from "@/lib/data"
 import { EASE } from "@/lib/motion"
@@ -33,16 +19,11 @@ const ConstellationScene = dynamic(
   },
 )
 
-/* ------------------------------------------------------------------ */
-/* Skills section                                                     */
-/* ------------------------------------------------------------------ */
-
 export default function Skills() {
   const [webgl, setWebgl] = useState<boolean | null>(null)
   const [activeCategory, setActiveCategory] = useState<string | null>(
     skillCategories[0].title,
   )
-  const [reduced, setReduced] = useState(false)
 
   useEffect(() => {
     setWebgl(
@@ -50,10 +31,6 @@ export default function Skills() {
         typeof document !== "undefined" &&
         document.createElement("canvas").getContext("webgl")
       ),
-    )
-    setReduced(
-      typeof window !== "undefined" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     )
   }, [])
 
@@ -87,7 +64,6 @@ export default function Skills() {
       id="skills"
       className="relative overflow-hidden bg-base py-28 md:py-44"
     >
-      {/* Section number */}
       <div className="pointer-events-none absolute -right-10 top-10 select-none lg:right-6">
         <span className="text-outline text-[16rem] font-black leading-none tracking-[-0.06em] lg:text-[22rem]">
           03
@@ -95,7 +71,18 @@ export default function Skills() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-8">
-        <RevealSection />
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: EASE }}
+          className="mb-14"
+        >
+          <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.32em]">
+            <span className="text-accent">03</span>
+            <span className="text-zinc-600">Technology Constellation</span>
+            <span className="h-px w-14 bg-white/15" aria-hidden />
+          </div>
+        </motion.div>
 
         {/* 3D constellation */}
         <div className="relative h-[560px] lg:h-[700px] flex items-center justify-center mb-16 md:mb-24">
@@ -120,17 +107,17 @@ export default function Skills() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: EASE }}
-            className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8"
+            className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-10"
           >
-            <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-raised p-6 md:p-8 shadow-2xl">
-              <div className="flex items-center gap-3 mb-4 font-mono text-[10px] uppercase tracking-[0.3em] text-cyan-400">
+            <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-raised p-7 md:p-10 shadow-2xl">
+              <div className="flex items-center gap-3 mb-5 font-mono text-[10px] uppercase tracking-[0.3em] text-cyan-400">
                 <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                 {activeCat.title}
               </div>
               <p className="text-sm font-light leading-7 text-zinc-400">
                 {activeCat.desc}
               </p>
-              <div className="mt-6 flex flex-wrap gap-2">
+              <div className="mt-8 flex flex-wrap gap-2">
                 {activeCat.items.map((item) => (
                   <span
                     key={item.name}
@@ -141,8 +128,8 @@ export default function Skills() {
                 ))}
               </div>
             </div>
-            <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-raised p-6 md:p-8 shadow-2xl">
-              <div className="font-mono text-[10px] uppercase tracking-[0.3em] mb-4 text-zinc-600">
+            <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-raised p-7 md:p-10 shadow-2xl">
+              <div className="font-mono text-[10px] uppercase tracking-[0.3em] mb-5 text-zinc-600">
                 Technologies in this domain
               </div>
               <div className="space-y-3">
@@ -182,27 +169,6 @@ export default function Skills() {
     </section>
   )
 }
-
-function RevealSection() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.9, ease: EASE }}
-      className="mb-14"
-    >
-      <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.32em]">
-        <span className="text-accent">03</span>
-        <span className="text-zinc-600">Technology Constellation</span>
-        <span className="h-px w-14 bg-white/15" aria-hidden />
-      </div>
-    </motion.div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/* CSS fallback — same content, no WebGL                              */
-/* ------------------------------------------------------------------ */
 
 function SkillsFallback() {
   return (

@@ -6,7 +6,7 @@ import { timeline } from "@/lib/data"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { Reveal } from "@/components/ui/Reveal"
 import { EASE } from "@/lib/motion"
-import { Briefcase, Globe, Code2 } from "lucide-react"
+import { Briefcase, Code2, Globe } from "lucide-react"
 
 const ROLE_ICONS: Record<string, React.ElementType> = {
   "Full-Stack Intern": Briefcase,
@@ -38,7 +38,6 @@ export default function Experience() {
         />
 
         <div className="relative mx-auto max-w-3xl">
-          {/* Spine */}
           <div className="absolute left-[22px] top-0 bottom-0 w-px bg-gradient-to-b from-white/[0.06] via-white/[0.02] to-transparent" />
 
           {timeline.map((item, index) => {
@@ -48,56 +47,53 @@ export default function Experience() {
                 key={item.period}
                 className="relative md:grid md:grid-cols-[180px_1fr] md:gap-12"
               >
-              {/* Marker */}
-              <motion.div
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true, margin: "-120px" }}
-                transition={{ duration: 0.5, ease: EASE, delay: index * 0.1 }}
-                className="relative z-10 block w-11 h-11 rounded-full border border-white/[0.14] bg-elevated flex items-center justify-center shadow-[0_0_24px_rgba(37,99,235,0.35)]"
-              >
-                <span className="absolute -inset-1 rounded-full bg-accent/[0.2] blur-md" />
-                <RoleIcon size={20} strokeWidth={2} className="text-accent" />
-              </motion.div>
+                <motion.div
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true, margin: "-120px" }}
+                  transition={{ duration: 0.5, ease: EASE, delay: index * 0.1 }}
+                  className="relative z-10 block w-11 h-11 rounded-full border border-white/[0.14] bg-elevated flex items-center justify-center shadow-[0_0_24px_rgba(37,99,235,0.35)]"
+                >
+                  <span className="absolute -inset-1 rounded-full bg-accent/[0.2] blur-md" />
+                  <RoleIcon size={20} strokeWidth={2} className="text-accent" />
+                </motion.div>
 
-              {/* Period */}
-              <Reveal
-                delay={index * 0.06}
-                className="pl-6 font-mono text-xs uppercase tracking-[0.25em] text-zinc-500 md:pl-0 md:text-right"
-              >
-                {item.period}
-              </Reveal>
+                <Reveal
+                  delay={index * 0.06}
+                  className="pl-6 font-mono text-xs uppercase tracking-[0.25em] text-zinc-500 md:pl-0 md:text-right"
+                >
+                  {item.period}
+                </Reveal>
 
-              {/* Content */}
-              <Reveal delay={index * 0.06 + 0.05} className="pl-6 md:pl-0">
-                <div className="mb-2 flex items-baseline gap-3">
-                  <h3 className="text-xl font-bold tracking-[-0.02em] text-white md:text-2xl">
-                    {item.role}
-                  </h3>
-                  <p className="font-mono text-xs uppercase tracking-[0.16em] text-cyan-300">
-                    {item.company}
+                <Reveal delay={index * 0.06 + 0.05} className="pl-6 md:pl-0">
+                  <div className="mb-2 flex items-baseline gap-3">
+                    <h3 className="text-xl font-bold tracking-[-0.02em] text-white md:text-2xl">
+                      {item.role}
+                    </h3>
+                    <p className="font-mono text-xs uppercase tracking-[0.16em] text-cyan-300">
+                      {item.company}
+                    </p>
+                  </div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500 mb-4">
+                    {item.location}
                   </p>
-                </div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-500 mb-4">
-                  {item.location}
-                </p>
-                <p className="mb-6 max-w-xl text-sm font-light leading-7 text-zinc-400 md:text-base">
-                  {item.description}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {item.stack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-500"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </Reveal>
-            </div>
-          )
-        })}
+                  <p className="mb-6 max-w-xl text-sm font-light leading-7 text-zinc-400 md:text-base">
+                    {item.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {item.stack.map((tech) => (
+                      <span
+                        key={tech}
+                        className="border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-500"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </Reveal>
+              </div>
+            )
+          })}
         </div>
 
         <Reveal

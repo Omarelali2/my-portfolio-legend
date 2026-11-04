@@ -13,14 +13,14 @@ type StarfieldProps = {
 /**
  * Deep-space starfield with three parallax layers and subtle twinkling.
  */
-export function Starfield({ count = 2400, depth = 130, speed = 1 }: StarfieldProps) {
+export function Starfield({ count = 1800, depth = 140, speed = 1 }: StarfieldProps) {
   const ref = useRef<THREE.Points>(null)
 
   const palette = [0xffffff, 0xe8f5ff, 0x22d3ee, 0x8b5cf6, 0x2563eb]
   const positions = new Float32Array(count * 3)
   const colors = new Float32Array(count * 3)
   const sizes = new Float32Array(count)
-  const layers = new Float32Array(count) // 0 = near, 1 = far (parallax weight)
+  const layers = new Float32Array(count)
   const twinkleOffset = new Float32Array(count)
 
   for (let i = 0; i < count; i++) {
@@ -33,7 +33,7 @@ export function Starfield({ count = 2400, depth = 130, speed = 1 }: StarfieldPro
     colors[i * 3 + 1] = c.g
     colors[i * 3 + 2] = c.b
 
-    sizes[i] = Math.random() * 1.1 + 0.3
+    sizes[i] = Math.random() * 1.2 + 0.4
     layers[i] = Math.random()
     twinkleOffset[i] = Math.random() * Math.PI * 2
   }
@@ -46,10 +46,10 @@ export function Starfield({ count = 2400, depth = 130, speed = 1 }: StarfieldPro
   geometry.setAttribute("twinkleOffset", new THREE.BufferAttribute(twinkleOffset, 1))
 
   const material = new THREE.PointsMaterial({
-    size: 0.55,
+    size: 0.6,
     vertexColors: true,
     transparent: true,
-    opacity: 0.9,
+    opacity: 0.85,
     sizeAttenuation: true,
   })
 
@@ -60,17 +60,17 @@ export function Starfield({ count = 2400, depth = 130, speed = 1 }: StarfieldPro
     const obj = ref.current
     if (!obj) return
     const t = state.clock.elapsedTime * speed
-    obj.rotation.y = t * 0.01
-    obj.rotation.x = t * 0.005
+    obj.rotation.y = t * 0.008
+    obj.rotation.x = t * 0.004
   })
 
   return <primitive object={points} />
 }
 
 /**
- * Floating energy particles — glowing motes that rise and drift around the ship.
+ * Floating energy particles — glowing motes that drift around the ship.
  */
-export function EnergyParticles({ count = 44 }: { count?: number }) {
+export function EnergyParticles({ count = 36 }: { count?: number }) {
   const ref = useRef<THREE.Points>(null)
 
   const positions = new Float32Array(count * 3)
@@ -82,20 +82,20 @@ export function EnergyParticles({ count = 44 }: { count?: number }) {
   const palette = [0x22d3ee, 0x8b5cf6, 0x2563eb]
 
   for (let i = 0; i < count; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 12
-    positions[i * 3 + 1] = Math.random() * 8 - 4
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 12
+    positions[i * 3] = (Math.random() - 0.5) * 14
+    positions[i * 3 + 1] = Math.random() * 10 - 5
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 14
 
-    velocities[i * 3] = (Math.random() - 0.5) * 0.015
-    velocities[i * 3 + 1] = 0.012 + Math.random() * 0.018
-    velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.015
+    velocities[i * 3] = (Math.random() - 0.5) * 0.012
+    velocities[i * 3 + 1] = 0.01 + Math.random() * 0.015
+    velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.012
 
     const c = new THREE.Color(palette[Math.floor(Math.random() * palette.length)])
     colors[i * 3] = c.r
     colors[i * 3 + 1] = c.g
     colors[i * 3 + 2] = c.b
 
-    sizes[i] = Math.random() * 0.4 + 0.15
+    sizes[i] = Math.random() * 0.5 + 0.2
     lifeOffset[i] = Math.random() * Math.PI * 2
   }
 
@@ -105,7 +105,7 @@ export function EnergyParticles({ count = 44 }: { count?: number }) {
   geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1))
 
   const material = new THREE.PointsMaterial({
-    size: 0.5,
+    size: 0.6,
     vertexColors: true,
     transparent: true,
     opacity: 0,
@@ -124,25 +124,24 @@ export function EnergyParticles({ count = 44 }: { count?: number }) {
     let needsUpdate = false
 
     for (let i = 0; i < count; i++) {
-      array[i * 3] += velocities[i * 3] + Math.sin(t + lifeOffset[i]) * 0.004
+      array[i * 3] += velocities[i * 3] + Math.sin(t + lifeOffset[i]) * 0.003
       array[i * 3 + 1] += velocities[i * 3 + 1]
-      array[i * 3 + 2] += velocities[i * 3 + 2] + Math.cos(t * 0.7 + lifeOffset[i]) * 0.004
+      array[i * 3 + 2] += velocities[i * 3 + 2] + Math.cos(t * 0.6 + lifeOffset[i]) * 0.003
 
-      if (array[i * 3 + 1] > 5) {
-        array[i * 3 + 1] = -5
-        array[i * 3] = (Math.random() - 0.5) * 12
-        array[i * 3 + 2] = (Math.random() - 0.5) * 12
+      if (array[i * 3 + 1] > 6) {
+        array[i * 3 + 1] = -6
+        array[i * 3] = (Math.random() - 0.5) * 14
+        array[i * 3 + 2] = (Math.random() - 0.5) * 14
         needsUpdate = true
       }
     }
 
     if (needsUpdate) pos.needsUpdate = true
 
-    // Gentle shimmer on opacity
-    const shimmer = 0.55 + Math.sin(t * 2) * 0.25
+    const shimmer = 0.5 + Math.sin(t * 1.5) * 0.3
     material.opacity = shimmer
 
-    obj.rotation.y = t * 0.005
+    obj.rotation.y = t * 0.004
   })
 
   return <primitive object={points} />

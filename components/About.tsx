@@ -4,7 +4,7 @@ import React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Play, Monitor, Server, Code2 } from "lucide-react"
+import { Monitor, Code2, Server, Globe } from "lucide-react"
 import { Reveal } from "@/components/ui/Reveal"
 import { SectionHeader } from "@/components/ui/SectionHeader"
 import { EASE } from "@/lib/motion"
@@ -17,10 +17,6 @@ const facts = [
   { label: "Interests", value: "Real-time / Systems / Networks" },
 ]
 
-/* ------------------------------------------------------------------ */
-/* Timeline item — education + experience in one flow                 */
-/* ------------------------------------------------------------------ */
-
 type TimelineCardProps = {
   index: number
   period: string
@@ -30,6 +26,11 @@ type TimelineCardProps = {
   description: string
   stack: string[]
   kind: "degree" | "role"
+}
+
+const ICONS: Record<string, React.ElementType> = {
+  degree: Monitor,
+  role: Code2,
 }
 
 function TimelineCard({
@@ -42,11 +43,7 @@ function TimelineCard({
   stack,
   kind,
 }: TimelineCardProps) {
-  const icons: Record<string, React.ElementType> = {
-    degree: Monitor,
-    role: Code2,
-  }
-  const Icon = icons[kind]
+  const Icon = ICONS[kind]
 
   return (
     <motion.div
@@ -56,10 +53,8 @@ function TimelineCard({
       transition={{ duration: 0.7, ease: EASE, delay: index * 0.08 }}
       className="relative md:grid md:grid-cols-[150px_1fr] md:gap-10"
     >
-      {/* Connector line */}
       <span className="absolute left-0 top-2 bottom-2 hidden w-px bg-white/[0.08] md:block" />
 
-      {/* Marker */}
       <motion.div
         initial={{ scale: 0 }}
         whileInView={{ scale: 1 }}
@@ -68,15 +63,12 @@ function TimelineCard({
         className="relative z-10 block w-10 h-10 rounded-full border border-white/[0.12] bg-elevated flex items-center justify-center text-accent shadow-[0_0_20px_rgba(37,99,235,0.35)]"
       >
         <Icon size={18} strokeWidth={2} />
-        <span className="absolute -inset-1.5 rounded-full bg-accent/[0.15] blur-md opacity-0 transition-opacity [.group\/marker:hover_&]:opacity-100 group/marker" />
       </motion.div>
 
-      {/* Period */}
       <Reveal delay={index * 0.05} className="pl-3 font-mono text-xs uppercase tracking-[0.25em] text-zinc-500 md:pl-0 md:text-right">
         {period}
       </Reveal>
 
-      {/* Content */}
       <Reveal delay={index * 0.05 + 0.04} className="pl-3 md:pl-0">
         <div className="mb-1 flex items-baseline gap-2.5">
           <h3 className="text-xl font-bold tracking-[-0.02em] text-white md:text-2xl">
@@ -110,7 +102,6 @@ export default function About() {
       id="about"
       className="relative overflow-hidden bg-base py-28 md:py-44"
     >
-      {/* Section number */}
       <div className="pointer-events-none absolute -right-10 top-10 select-none lg:right-6">
         <span className="text-outline text-[16rem] font-black leading-none tracking-[-0.06em] lg:text-[22rem]">
           01
@@ -129,12 +120,12 @@ export default function About() {
         <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-12 lg:gap-16">
           {/* Story */}
           <div className="lg:col-span-7">
-            <h2 className="text-[clamp(2.6rem,5vw,4.5rem)] font-medium leading-[1.02] tracking-[-0.03em] text-white">
+            <h2 className="text-[clamp(2.4rem,5vw,3.8rem)] font-medium leading-[1.05] tracking-[-0.03em] text-white">
               <span className="block">I build systems that run on code, data, and</span>
-              <span className="block mt-2 text-cyan-300">networked infrastructure.</span>
+              <span className="block mt-3 text-cyan-300">networked infrastructure.</span>
             </h2>
 
-            <div className="mt-14 space-y-7 text-base font-light leading-8 text-zinc-400 md:text-lg">
+            <div className="mt-14 space-y-8 text-base font-light leading-8 text-zinc-400 md:text-lg">
               <Reveal delay={0.1}>
                 <p>
                   Computer Science graduate from the Lebanese University, currently
@@ -218,7 +209,7 @@ export default function About() {
           ))}
         </div>
 
-        {/* Timeline: education + experience */}
+        {/* Timeline */}
         <div className="mt-24 border-t border-white/[0.08] pt-16">
           <Reveal y={16} className="mb-14">
             <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.32em]">
@@ -228,13 +219,12 @@ export default function About() {
             </div>
           </Reveal>
 
-          <h2 className="mb-16 text-[clamp(2.2rem,4.5vw,3.2rem)] font-bold uppercase leading-[1.02] tracking-[-0.03em] text-white">
+          <h2 className="mb-16 text-[clamp(2.2rem,4.5vw,3rem)] font-bold uppercase leading-[1.05] tracking-[-0.03em] text-white">
             From the classroom to production systems
           </h2>
 
           <div className="relative mx-auto max-w-3xl">
-            {/* Spine */}
-            <div className="absolute left-2 top-0 bottom-0 w-px bg-gradient-to-b from-white/[0.06] via-white/[0.03] to-transparent" />
+            <div className="absolute left-2 top-0 bottom-0 w-px bg-gradient-to-b from-white/[0.06] via-white/[0.02] to-transparent" />
 
             {[
               ...education.map((e) => ({
@@ -257,7 +247,6 @@ export default function About() {
             ))}
           </div>
 
-          {/* Certifications strip */}
           <div className="mt-16 grid grid-cols-2 gap-4 overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02]">
             {certifications.map((cert, i) => (
               <Reveal key={cert.name} delay={i * 0.06} className="h-full">
@@ -272,7 +261,7 @@ export default function About() {
                     </p>
                   </div>
                   <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-accent">
-                    <Play size={16} />
+                    <Globe size={16} />
                   </div>
                 </div>
               </Reveal>

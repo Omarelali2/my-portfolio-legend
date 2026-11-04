@@ -84,7 +84,8 @@ function SystemPreview({ variant }: { variant: FeaturedProject["slug"] }) {
         const dy = (nb.y - na.y) * height
         const dist = Math.sqrt(dx * dx + dy * dy)
         const alpha = 0.25 + 0.15 * Math.sin(time + dist * 0.002)
-        ctx.strokeStyle = `rgba(${hexToRgb(accent)}, ${alpha})`
+        const rgb = hexToRgb(accent)
+        ctx.strokeStyle = `rgba(${rgb}, ${alpha})`
         ctx.beginPath()
         ctx.moveTo(na.x * width, na.y * height)
         ctx.lineTo(nb.x * width, nb.y * height)
@@ -98,7 +99,7 @@ function SystemPreview({ variant }: { variant: FeaturedProject["slug"] }) {
         if (n.y < 0 || n.y > 1) n.vy *= -1
 
         const pulse = 0.6 + 0.4 * Math.sin(time * 2 + n.r * 10)
-        ctx.fillStyle = variant === "tahaddiyat" ? "#2563eb" : variant === "arena" ? "#22d3ee" : "#8b5cf6"
+        ctx.fillStyle = accent
         ctx.globalAlpha = pulse
         ctx.beginPath()
         ctx.arc(n.x * width, n.y * height, n.r * pulse, 0, Math.PI * 2)
@@ -106,8 +107,8 @@ function SystemPreview({ variant }: { variant: FeaturedProject["slug"] }) {
         ctx.globalAlpha = 1
       })
 
-      // Central energy core
       const corePulse = 0.5 + 0.5 * Math.sin(time * 3)
+      const rgb = hexToRgb(accent)
       ctx.fillStyle = accent
       ctx.shadowColor = accent
       ctx.shadowBlur = corePulse * 20
@@ -157,6 +158,7 @@ function ProjectCard({
   index: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
+
   const accent =
     project.slug === "tahaddiyat"
       ? "bg-gradient-to-br from-accent to-cyan-400 text-black"
@@ -205,17 +207,11 @@ function ProjectCard({
         <div className="mb-3 flex items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.28em]">
-              <span
-                className={cn(
-                  accent.includes("text-black") ? "text-black" : "text-cyan-400",
-                )}
-              >
+              <span className={cn(accent.includes("text-black") ? "text-black" : "text-cyan-400")}>
                 {num}
               </span>
               <span className="hidden md:inline text-zinc-600">{project.type}</span>
-              <span className="text-zinc-600" aria-hidden>
-                ·
-              </span>
+              <span className="text-zinc-600" aria-hidden>·</span>
               <span className="text-zinc-600">{project.year}</span>
             </div>
             <h3 className="mt-2 font-bold uppercase tracking-[-0.03em] text-white text-2xl md:text-3xl">

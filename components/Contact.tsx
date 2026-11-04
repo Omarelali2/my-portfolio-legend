@@ -60,7 +60,7 @@ export default function Contact() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: EASE }}
-          className="text-[clamp(2.8rem,9vw,6rem)] font-bold uppercase leading-[0.85] tracking-[-0.05em] text-white"
+          className="text-[clamp(2.4rem,8vw,4.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.04em] text-white md:text-[clamp(3rem,10vw,5rem)]"
         >
           <WordReveal text="Have an idea?" />
           <br />

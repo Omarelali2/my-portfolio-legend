@@ -14,10 +14,6 @@ const EDU_ICONS: Record<string, React.ElementType> = {
   "Master's Degree": Laptop,
 }
 
-/* ------------------------------------------------------------------ */
-/* Network topology — animated SVG                                    */
-/* ------------------------------------------------------------------ */
-
 const NETWORK_NODES = [
   { id: "bachelor", label: "Bachelor's CS", cx: 120, cy: 110, kind: "edu" },
   { id: "master", label: "Master's CS", cx: 360, cy: 110, kind: "edu" },
@@ -57,7 +53,7 @@ export default function EducationNetworking() {
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:gap-16">
           {/* Left: Education */}
           <div className="lg:col-span-6">
-            <h2 className="text-[clamp(2.2rem,4.5vw,3rem)] font-bold uppercase leading-[1.02] tracking-[-0.03em] text-white">
+            <h2 className="text-[clamp(2.2rem,4.5vw,3rem)] font-bold uppercase leading-[1.05] tracking-[-0.03em] text-white">
               Computer Science
               <br />
               <span className="text-cyan-300">Lebanese University</span>
@@ -69,39 +65,38 @@ export default function EducationNetworking() {
                 return (
                   <Reveal key={edu.degree} delay={i * 0.08} className="h-full">
                     <div
-                    className={cn(
-                      "group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-7 transition-colors duration-300 hover:bg-white/[0.04]",
-                      i % 2 === 0 ? "border-l-2 border-l-accent" : "border-l-2 border-l-cyan-500",
-                    )}
-                  >
-                    <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <Icon size={24} className="text-accent" />
-                    </div>
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <div className="flex items-center gap-2.5 mb-2 font-mono text-[10px] uppercase tracking-[0.28em] text-zinc-600">
-                          <span className="text-accent">{String(i + 1).padStart(2, "0")}</span>
-                          <span>{edu.year}</span>
+                      className={cn(
+                        "group relative overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-7 transition-colors duration-300 hover:bg-white/[0.04]",
+                        i % 2 === 0 ? "border-l-2 border-l-accent" : "border-l-2 border-l-cyan-500",
+                      )}
+                    >
+                      <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <Icon size={24} className="text-accent" />
+                      </div>
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <div className="flex items-center gap-2.5 mb-2 font-mono text-[10px] uppercase tracking-[0.28em] text-zinc-600">
+                            <span className="text-accent">{String(i + 1).padStart(2, "0")}</span>
+                            <span>{edu.year}</span>
+                          </div>
+                          <h3 className="text-xl font-bold tracking-[-0.02em] text-white md:text-2xl">
+                            {edu.degree}
+                          </h3>
+                          <p className="mt-1 font-mono text-xs uppercase tracking-[0.16em] text-cyan-300">
+                            {edu.field}
+                          </p>
+                          <p className="mt-3 text-sm font-light text-zinc-400 leading-6">
+                            {edu.institution} &nbsp;·&nbsp; {edu.location}
+                          </p>
                         </div>
-                        <h3 className="text-xl font-bold tracking-[-0.02em] text-white md:text-2xl">
-                          {edu.degree}
-                        </h3>
-                        <p className="mt-1 font-mono text-xs uppercase tracking-[0.16em] text-cyan-300">
-                          {edu.field}
-                        </p>
-                        <p className="mt-3 text-sm font-light text-zinc-400 leading-6">
-                          {edu.institution} &nbsp;·&nbsp; {edu.location}
-                        </p>
-                      </div>
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 text-zinc-400 transition-all duration-300 group-hover:rotate-45 group-hover:border-accent group-hover:text-accent">
-                        <Share2 size={16} />
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 text-zinc-400 transition-all duration-300 group-hover:rotate-45 group-hover:border-accent group-hover:text-accent">
+                          <Share2 size={16} />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Reveal>
-              )
-            })
-            }
+                  </Reveal>
+                )
+              })}
             </div>
 
             <div className="mt-12 grid grid-cols-2 gap-4 overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02]">
@@ -137,7 +132,6 @@ export default function EducationNetworking() {
                 className="max-w-full h-auto"
                 aria-label="Network topology connecting education and infrastructure projects"
               >
-                {/* Background mesh */}
                 <defs>
                   <marker
                     id="arrow"
@@ -151,7 +145,6 @@ export default function EducationNetworking() {
                   </marker>
                 </defs>
 
-                {/* Connection lines with animated flow */}
                 {NETWORK_LINKS.map(([from, to], i) => {
                   const a = NETWORK_NODES.find((n) => n.id === from)!
                   const b = NETWORK_NODES.find((n) => n.id === to)!
@@ -180,7 +173,6 @@ export default function EducationNetworking() {
                   )
                 })}
 
-                {/* Nodes */}
                 {NETWORK_NODES.map((node) => (
                   <g key={node.id}>
                     <circle
