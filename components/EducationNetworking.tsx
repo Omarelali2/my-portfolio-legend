@@ -156,9 +156,8 @@ export default function EducationNetworking() {
                   const a = NETWORK_NODES.find((n) => n.id === from)!
                   const b = NETWORK_NODES.find((n) => n.id === to)!
                   return (
-                    <>
+                    <g key={`link-${i}`}>
                       <line
-                        key={`line-${i}`}
                         x1={a.cx}
                         y1={a.cy}
                         x2={b.cx}
@@ -167,7 +166,6 @@ export default function EducationNetworking() {
                         strokeWidth="1.5"
                       />
                       <line
-                        key={`flow-${i}`}
                         x1={a.cx}
                         y1={a.cy}
                         x2={b.cx}
@@ -178,7 +176,7 @@ export default function EducationNetworking() {
                         strokeDasharray="6 10"
                         className="animate-dash-flow"
                       />
-                    </>
+                    </g>
                   )
                 })}
 
