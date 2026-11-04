@@ -56,7 +56,9 @@ function SystemPreview({ variant }: { variant: FeaturedProject["slug"] }) {
 
     function resize() {
       if (!canvas || !ctx) return
-      const rect = canvas.parentElement!.getBoundingClientRect()
+      const parent = canvas.parentElement
+      if (!parent) return
+      const rect = parent.getBoundingClientRect()
       width = rect.width
       height = rect.height
       canvas.width = width * dpr
