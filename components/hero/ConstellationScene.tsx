@@ -1,352 +1,14 @@
 "use client"
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import * as THREE from "three"
-import { useEffect, useRef, useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { useEffect, useState } from "react"
 import { skillCategories } from "@/lib/data"
+import { EASE } from "@/lib/motion"
+import { cn } from "@/lib/utils"
 
 /* ------------------------------------------------------------------ */
-/* Simple Icons map (official slugs)                                   */
-/* ------------------------------------------------------------------ */
-
-const SIMPLE_ICONS: Record<string, string> = {
-  typescript: "typescript",
-  javascript: "javascript",
-  java: "java",
-  csharp: "csharp",
-  php: "php",
-  react: "react",
-  nextdotjs: "nextdotjs",
-  tailwindcss: "tailwindcss",
-  nodejs: "nodejs",
-  express: "express",
-  nestjs: "nestjs",
-  postgresql: "postgresql",
-  mongodb: "mongodb",
-  oracle: "oracle",
-  amazonwebservices: "amazonwebservices",
-  docker: "docker",
-  git: "git",
-  postman: "postman",
-  reactnative: "reactnative",
-  expo: "expo",
-}
-
-const SIMPLE_ICON_COLORS: Record<string, string> = {
-  typescript: "3178c6",
-  javascript: "f7df1e",
-  java: "007396",
-  csharp: "68217a",
-  php: "777bb4",
-  react: "61dafb",
-  nextdotjs: "000000",
-  tailwindcss: "06b6d4",
-  nodejs: "339933",
-  express: "000000",
-  nestjs: "ea2845",
-  postgresql: "4169e1",
-  mongodb: "47a248",
-  oracle: "f80000",
-  amazonwebservices: "ff9900",
-  docker: "2496ed",
-  git: "f05032",
-  postman: "ff6c37",
-  reactnative: "61dafb",
-  expo: "000020",
-}
-
-const LUCIDE_FALLBACKS: Record<string, { letter: string; color: string }> = {
-  Code2: { letter: "</>", color: "#61dafb" },
-  Server: { letter: "SV", color: "#f59e0b" },
-  Database: { letter: "DB", color: "#3b82f6" },
-  ShieldCheck: { letter: "✓", color: "#22d3ee" },
-  Zap: { letter: "⚡", color: "#fbbf24" },
-  Wifi: { letter: "📶", color: "#8b5cf6" },
-  Layout: { letter: "📐", color: "#a855f7" },
-  Code: { letter: "{}", color: "#61dafb" },
-  Github: { letter: "🐙", color: "#f05032" },
-  Cloud: { letter: "☁", color: "#3b82f6" },
-  Edit3: { letter: "✎", color: "#10b981" },
-  Sliders: { letter: "≡", color: "#8b5cf6" },
-  Router: { letter: "🔀", color: "#61dafb" },
-  Share2: { letter: "🔗", color: "#22d3ee" },
-}
-
-/* ------------------------------------------------------------------ */
-/* Texture cache (Simple Icons CDN via canvas)                        */
-/* ------------------------------------------------------------------ */
-
-const textureCache = new Map<string, THREE.Texture>()
-
-function createTechTexture(
-  name: string,
-  simpleIcon?: string,
-  color?: string,
-): THREE.Texture {
-  const cacheKey = `${name}:${simpleIcon ?? ""}`
-  if (textureCache.has(cacheKey)) {
-    return textureCache.get(cacheKey)!
-  }
-
-  const canvas = document.createElement("canvas")
-  canvas.width = 128
-  canvas.height = 128
-  const ctx = canvas.getContext("2d")!
-  const r = 42
-
-  const hex = color ? "#" + color : "#ffffff"
-  // Outer glow
-  const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64)
-  grad.addColorStop(0, hex + "60")
-  grad.addColorStop(1, "transparent")
-  ctx.fillStyle = grad
-  ctx.beginPath()
-  ctx.arc(64, 64, r * 1.9, 0, Math.PI * 2)
-  ctx.fill()
-
-  // Icon circle
-  ctx.fillStyle = "#0b1228"
-  ctx.beginPath()
-  ctx.arc(64, 64, r, 0, Math.PI * 2)
-  ctx.fill()
-  ctx.strokeStyle = "rgba(255,255,255,0.15)"
-  ctx.lineWidth = 2
-  ctx.stroke()
-
-  // Real logo from Simple Icons CDN (with graceful fallback)
-  if (simpleIcon) {
-    const img = new Image()
-    img.crossOrigin = "anonymous"
-    img.src = `https://cdn.simpleicons.org/${simpleIcon}${
-      color ? "/" + color : ""
-    }`
-    img.onload = () => {
-      try {
-        ctx.drawImage(img, 64 - r * 0.75, 64 - r * 0.75, r * 1.5, r * 1.5)
-        ;(texture as any).needsUpdate = true
-      } catch {
-        // Canvas tainted or decode failed — fall back to letter
-        drawFallbackLetter(ctx, name, r)
-        ;(texture as any).needsUpdate = true
-      }
-    }
-    img.onerror = () => {
-      drawFallbackLetter(ctx, name, r)
-      ;(texture as any).needsUpdate = true
-    }
-  } else {
-    drawFallbackLetter(ctx, name, r)
-  }
-
-  const texture = new THREE.CanvasTexture(canvas)
-  texture.needsUpdate = true
-  textureCache.set(cacheKey, texture)
-  return texture
-}
-
-/**
- * Fallback: draw the lucide letter when the Simple Icons image fails to load.
- */
-function drawFallbackLetter(
-  ctx: CanvasRenderingContext2D,
-  name: string,
-  r: number,
-) {
-  const fb = LUCIDE_FALLBACKS[name]
-  if (fb) {
-    ctx.fillStyle = fb.color
-    ctx.font = "bold 26px 'Segoe UI', system-ui, sans-serif"
-    ctx.textAlign = "center"
-    ctx.textBaseline = "middle"
-    ctx.fillText(fb.letter, 64, 67)
-  }
-}
-
-/* ------------------------------------------------------------------ */
-/* Icon rendered as a Three.js Sprite (no DOM, no unmount issues)      */
-/* ------------------------------------------------------------------ */
-
-function TechIcon({
-  item,
-  active,
-  position,
-  rotation,
-  scale,
-}: {
-  item: (typeof skillCategories)[number]["items"][number]
-  active: boolean
-  position?: [number, number, number]
-  rotation?: [number, number, number]
-  scale?: number
-}) {
-  const spriteRef = useRef<THREE.Sprite>(null)
-  const [isHovered, setIsHovered] = useState(false)
-
-  const simpleIcon = item.icon ?? undefined
-  const color = item.iconColor ?? undefined
-  const texture = createTechTexture(item.name, simpleIcon, color)
-
-  useFrame(() => {
-    const sprite = spriteRef.current
-    if (!sprite) return
-    const targetScale = (active || isHovered) ? 1.35 : 1.0
-    sprite.scale.lerp(new THREE.Vector3(targetScale, targetScale, 1), 0.15)
-  })
-
-  return (
-    <sprite
-      ref={spriteRef}
-      position={position ?? [0, 0, 0]}
-      rotation={rotation ?? [0, 0, 0]}
-      onPointerOver={() => setIsHovered(true)}
-      onPointerOut={() => setIsHovered(false)}
-    >
-      <spriteMaterial map={texture} transparent depthWrite={false} />
-    </sprite>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/* One orbital ring with its technology icons                         */
-/* ------------------------------------------------------------------ */
-
-function Orbit({
-  category,
-  index,
-  activeCategory,
-  setActiveCategory,
-}: {
-  category: (typeof skillCategories)[number]
-  index: number
-  activeCategory: string | null
-  setActiveCategory: (id: string | null) => void
-}) {
-  const groupRef = useRef<THREE.Group>(null)
-  const active = activeCategory === category.title
-  const itemCount = category.items.length
-  const radius = 2.6 + index * 1.35
-  const speed = (0.05 + index * 0.012) * (index % 2 === 0 ? 1 : -1)
-
-  useFrame((state) => {
-    const group = groupRef.current
-    if (!group) return
-    group.rotation.y += state.clock.getDelta() * speed
-    group.position.y = Math.sin(state.clock.elapsedTime * 1.2 + index) * 0.06
-  })
-
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768
-  const maxItems = isMobile ? 3 : category.items.length
-
-  return (
-    <group ref={groupRef}>
-      {/* Orbit ring */}
-      <mesh
-        rotation={[-Math.PI / 2, 0, 0]}
-        geometry={new THREE.RingGeometry(radius - 0.018, radius + 0.018, 64)}
-        material={new THREE.MeshBasicMaterial({
-          color: active ? 0x22d3ee : 0xffffff,
-          transparent: true,
-          opacity: active ? 0.18 : 0.05,
-          side: THREE.DoubleSide,
-        })}
-      />
-      {category.items.slice(0, maxItems).map((item, i) => {
-        const angle = (i / itemCount) * Math.PI * 2
-        const x = Math.sin(angle) * radius
-        const z = Math.cos(angle) * radius
-        return (
-          <TechIcon
-            key={item.name}
-            item={item}
-            active={active}
-            position={[x, 0, z]}
-            rotation={[0, -angle, 0]}
-            scale={active ? 1.15 : 1}
-          />
-        )
-      })}
-    </group>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/* Camera controls — must live inside Canvas so useThree() is valid   */
-/* ------------------------------------------------------------------ */
-
-function ConstellationCameraControls() {
-  const { camera } = useThree()
-  const reduced =
-    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
-
-  useEffect(() => {
-    if (reduced) return
-    const onMove = (e: MouseEvent) => {
-      const nx = (e.clientX / window.innerWidth) * 2 - 1
-      const ny = (e.clientY / window.innerHeight) * 2 - 1
-      camera.position.x += (nx * 2.5 - camera.position.x) * 0.03
-      camera.position.y += (-ny * 1.5 - camera.position.y) * 0.03
-      camera.lookAt(0, 0, 0)
-    }
-    window.addEventListener("mousemove", onMove)
-    return () => window.removeEventListener("mousemove", onMove)
-  }, [reduced, camera])
-
-  useFrame((state) => {
-    if (reduced) return
-    const t = state.clock.elapsedTime
-    camera.position.x += (Math.sin(t * 0.08) * 2.2 - camera.position.x) * 0.02
-    camera.lookAt(0, 0, 0)
-  })
-
-  return null
-}
-
-/* ------------------------------------------------------------------ */
-/* Tooltip overlay — HTML positioned over canvas                      */
-/* ------------------------------------------------------------------ */
-
-function TooltipOverlay({
-  activeCategory,
-}: {
-  activeCategory: string | null
-}) {
-  const activeCat = skillCategories.find((c) => c.title === activeCategory)
-
-  if (!activeCat) return null
-
-  return (
-    <div
-      className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none"
-      style={{ transform: `translate(-50%, -50%) scale(${activeCat ? 1 : 0})` }}
-    >
-      <div className="relative">
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-md rounded-2xl border border-white/10 p-6 md:p-8 shadow-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <div className="flex items-center gap-3 mb-4 font-mono text-[10px] uppercase tracking-[0.3em] text-cyan-400">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-            {activeCat.title}
-          </div>
-          <p className="text-sm font-light leading-7 text-zinc-400">
-            {activeCat.desc}
-          </p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            {activeCat.items.map((item) => (
-              <span
-                key={item.name}
-                className="border border-white/[0.08] bg-white/[0.02] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-zinc-400"
-              >
-                {item.name}
-              </span>
-            ))}
-          </div>
-        </div>
-        <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-b-white/10" />
-      </div>
-    </div>
-  )
-}
-
-/* ------------------------------------------------------------------ */
-/* 3D constellation scene                                             */
+/* Clean, organized technology constellation — CSS-based (no WebGL)    */
+/* Replaces the cluttered overlapping 3D spheres with a premium grid   */
 /* ------------------------------------------------------------------ */
 
 export function ConstellationScene({
@@ -356,54 +18,160 @@ export function ConstellationScene({
   activeCategory: string | null
   setActiveCategory: (id: string | null) => void
 }) {
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null)
+
   return (
     <div className="relative w-full h-full">
-      <Canvas
-        camera={{ position: [0, 0, 9], fov: 45 }}
-        frameloop="always"
-        dpr={[1, 1.5]}
-        shadows
-      >
-        <ConstellationCameraControls />
-        <ambientLight intensity={0.6} color={0xffffff} />
-        <pointLight position={[6, 6, 6]} intensity={0.8} color={0xffffff} />
-        <pointLight
-          position={[-6, -2, 6]}
-          intensity={0.5}
-          color={0x22d3ee}
-          distance={30}
-        />
-        <Constellation
-          categories={skillCategories}
-          activeCategory={activeCategory}
-          setActiveCategory={setActiveCategory}
-        />
-      </Canvas>
-      <TooltipOverlay activeCategory={activeCategory} />
-    </div>
-  )
-}
+      {/* Decorative orbital rings in background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.04]"
+            style={{
+              width: 280 + i * 220,
+              height: 280 + i * 220,
+              opacity: 0.5,
+              animation: `rotate${i} ${20 + i * 10}s linear infinite`,
+            }}
+          />
+        ))}
+        <style>{`
+          @keyframes rotate1 { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+          @keyframes rotate2 { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(-360deg); } }
+          @keyframes rotate3 { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+        `}</style>
+      </div>
 
-function Constellation({
-  categories,
-  activeCategory,
-  setActiveCategory,
-}: {
-  categories: typeof skillCategories
-  activeCategory: string | null
-  setActiveCategory: (id: string | null) => void
-}) {
-  return (
-    <group>
-      {categories.map((category, i) => (
-        <Orbit
-          key={category.title}
-          category={category}
-          index={i}
-          activeCategory={activeCategory}
-          setActiveCategory={setActiveCategory}
-        />
-      ))}
-    </group>
+      {/* Category grid */}
+      <div className="relative z-10 mx-auto max-w-6xl px-6 md:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {skillCategories.map((category, ci) => {
+            const isActive = activeCategory === category.title
+            const isHovered = hoveredCategory === category.title
+
+            return (
+              <motion.div
+                key={category.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: EASE, delay: ci * 0.06 }}
+                whileHover={{ y: -4 }}
+                onMouseEnter={() => setHoveredCategory(category.title)}
+                onMouseLeave={() => setHoveredCategory(null)}
+                className={cn(
+                  "group relative overflow-hidden rounded-2xl border p-7 md:p-8 transition-all duration-300",
+                  isActive
+                    ? "border-accent bg-accent/[0.08] shadow-[0_0_30px_rgba(37,99,235,0.25)]"
+                    : isHovered
+                      ? "border-white/20 bg-white/[0.02]"
+                      : "border-white/[0.06] bg-white/[0.02] hover:border-white/15 hover:bg-white/[0.03]",
+                )}
+              >
+                {/* Category header */}
+                <div className="mb-5 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.10] bg-white/[0.03]">
+                    <span className={cn(
+                      isActive ? "text-black" : "text-accent",
+                      "font-mono text-xs font-bold",
+                    )}>
+                      {String(ci + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-white tracking-tight">
+                      {category.title}
+                    </h3>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500">
+                      {category.items.length} technologies
+                    </p>
+                  </div>
+                </div>
+
+                {/* Technology icons — organized, well-spaced */}
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 md:gap-4">
+                  {category.items.map((item, ti) => (
+                    <motion.div
+                      key={item.name}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.4, ease: EASE, delay: 0.2 + ti * 0.03 }}
+                      whileHover={{ scale: 1.05 }}
+                      className="relative group flex flex-col items-center gap-2"
+                    >
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.02] transition-all duration-300 group-hover:border-white/25 group-hover:bg-white/[0.05] group-hover:shadow-[0_0_12px_rgba(255,255,255,0.05)]">
+                        <span className="font-mono text-[11px] font-bold">
+                          {item.name.length <= 4 ? item.name : item.name.slice(0, 3) + "·"}
+                        </span>
+                      </div>
+                      <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-zinc-500 group-hover:text-zinc-300 transition-colors leading-tight">
+                        {item.name}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Active badge */}
+                {isActive && (
+                  <div className="absolute top-4 right-4 flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-accent/30 bg-accent/10">
+                    <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+                    <span className="font-mono text-[9px] font-bold text-accent uppercase tracking-[0.2em]">
+                      Active
+                    </span>
+                  </div>
+                )}
+              </motion.div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Active category detail panel */}
+      <AnimatePresence>
+        {activeCategory && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.4, ease: EASE }}
+            className="relative z-10 mx-auto max-w-2xl mt-8 md:mt-10"
+          >
+            <div className="rounded-2xl border border-accent/20 bg-accent/[0.05] p-7 md:p-10 shadow-[0_0_40px_rgba(37,99,235,0.15)]">
+              <div className="flex items-center gap-3 mb-4 font-mono text-[10px] uppercase tracking-[0.3em] text-accent">
+                <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                {activeCategory} — Technology Systems
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {skillCategories.find((c) => c.title === activeCategory)?.items.map(
+                  (item) => (
+                    <div
+                      key={item.name}
+                      className="flex items-center gap-3 px-4 py-3 rounded-lg border border-white/[0.06] bg-white/[0.02] transition-colors hover:bg-white/[0.04]"
+                    >
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full border border-white/[0.10] bg-white/[0.03]">
+                        <span className={cn(
+                          item.icon ? "text-cyan-400" : "text-zinc-400",
+                          "font-mono text-[10px]",
+                        )}>
+                          {item.icon ? "●" : "◇"}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="font-mono text-xs font-medium text-zinc-300 block">
+                          {item.name}
+                        </span>
+                        <span className="font-mono text-[10px] text-zinc-500">
+                          {item.desc}
+                        </span>
+                      </div>
+                    </div>
+                  ),
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   )
 }
